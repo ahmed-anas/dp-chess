@@ -73,7 +73,7 @@ public class Player implements Serializable{
 	}
 	
 	
-	public static ArrayList<Player> fetch_players()         //Function to fetch the list of the players
+	public static ArrayList<Player> fetchPlayers()         //Function to fetch the list of the players
 	{
 		Player tempplayer;
 		ObjectInputStream input = null;

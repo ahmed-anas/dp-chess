@@ -23,7 +23,7 @@ public class Time
     {
        countdownTimer = new Timer(1000, new CountdownTimerListener());
        this.label = passedLabel;
-       Timerem=Main.timeRemaining;
+       Timerem=Main.getTimeRemaining();
     }
     
     //A function that starts the timer
@@ -35,7 +35,7 @@ public class Time
     //A function that resets the timer
     public void reset()
     {
-    	Timerem=Main.timeRemaining;
+    	Timerem=Main.getTimeRemaining();
     }
     
     //A function that is called after every second. It updates the timer and takes other necessary actions
@@ -56,7 +56,7 @@ public class Time
                label.setText("Time's up!");
                reset();
                start();
-               Main.Mainboard.changechance();
+               Main.mainBoard.changeMove();
 		 }
     }
  }
