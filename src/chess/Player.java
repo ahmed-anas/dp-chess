@@ -27,11 +27,9 @@ public class Player implements Serializable{
 	private Integer gamesplayed;
 	private Integer gameswon;
 	
-	//Constructor
 	public Player(String name)
 	{
 		this.name = name.trim();
-		//this.lname = lname.trim();
 		gamesplayed = new Integer(0);
 		gameswon = new Integer(0);
 	}
@@ -72,23 +70,26 @@ public class Player implements Serializable{
 		gameswon++;
 	}
 	
+	private static String getFilePath(String fileName) {
+		return System.getProperty("user.dir")+ File.separator + fileName;
+	}
+
+	private static void showMessage(String message) {
+		JOptionPane.showMessageDialog(null, message);
+	}
 	
-	public static ArrayList<Player> fetch_players()         //Function to fetch the list of the players
+	public static ArrayList<Player> fetch_players()
 	{
-		Player tempplayer;
 		ObjectInputStream input = null;
 		ArrayList<Player> players = new ArrayList<Player>();
 		try
 		{
-			File infile = new File(System.getProperty("user.dir")+ File.separator + "chessgamedata.dat");
+			File infile = new File(getFilePath("chessgamedata.dat"));
 			input = new ObjectInputStream(new FileInputStream(infile));
 			try
 			{
 				while(true)
-				{
-					tempplayer = (Player) input.readObject();
-					players.add(tempplayer);
-				}
+					players.add((Player) input.readObject());
 			}
 			catch(EOFException e)
 			{
@@ -104,13 +105,15 @@ public class Player implements Serializable{
 		{
 			e.printStackTrace();
 			try {input.close();} catch (IOException e1) {}
-			JOptionPane.showMessageDialog(null, "Unable to read the required Game files !!");
+			showMessage("Unable to read the required Game files !!");
 		}
 		catch (ClassNotFoundException e) 
 		{
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Game Data File Corrupted !! Click Ok to Continue Builing New File");
-		} catch (Exception e1) {
+			showMessage("Game Data File Corrupted !! Click Ok to Continue Builing New File");
+		}
+		catch (Exception e1)
+		{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
@@ -126,13 +129,15 @@ public class Player implements Serializable{
 		File outputfile=null;
 		try
 		{
-			inputfile = new File(System.getProperty("user.dir")+ File.separator + "chessgamedata.dat");
-			outputfile = new File(System.getProperty("user.dir")+ File.separator + "tempfile.dat");
-		} catch (SecurityException e)
+			inputfile = new File(getFilePath("chessgamedata.dat"));
+			outputfile = new File(getFilePath("tempfile.dat"));
+		}
+		catch (SecurityException e)
 		{
-			JOptionPane.showMessageDialog(null, "Read-Write Permission Denied !! Program Cannot Start");
+			showMessage("Read-Write Permission Denied !! Program Cannot Start");
 			System.exit(0);
-		} 
+		}
+		
 		boolean playerdonotexist;
 		try
 		{
@@ -140,8 +145,8 @@ public class Player implements Serializable{
 				outputfile.createNewFile();
 			if(inputfile.exists()==false)
 			{
-					output = new ObjectOutputStream(new java.io.FileOutputStream(outputfile,true));
-					output.writeObject(this);
+				output = new ObjectOutputStream(new java.io.FileOutputStream(outputfile,true));
+				output.writeObject(this);
 			}
 			else
 			{
@@ -170,7 +175,7 @@ public class Player implements Serializable{
 			}
 			inputfile.delete();
 			output.close();
-			File newf = new File(System.getProperty("user.dir")+ File.separator + "chessgamedata.dat");
+			File newf = new File(getFilePath("chessgamedata.dat"));
 			if(outputfile.renameTo(newf)==false)
 				System.out.println("File Renameing Unsuccessful");
 		}
@@ -181,16 +186,13 @@ public class Player implements Serializable{
 		catch (IOException e)
 		{
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Unable to read/write the required Game files !! Press ok to continue");
+			showMessage("Unable to read/write the required Game files !! Press ok to continue");
 		}
 		catch (ClassNotFoundException e) 
 		{
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Game Data File Corrupted !! Click Ok to Continue Builing New File");
+			showMessage("Game Data File Corrupted !! Click Ok to Continue Builing New File");
 		}
-		catch (Exception e)
-		{
-			
-		}
+		catch (Exception e){}
 	}
 }
