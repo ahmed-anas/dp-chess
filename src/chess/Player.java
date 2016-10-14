@@ -78,7 +78,8 @@ public class Player implements Serializable{
 		JOptionPane.showMessageDialog(null, message);
 	}
 	
-	public static ArrayList<Player> fetch_players()
+
+	public static ArrayList<Player> fetchPlayers()         //Function to fetch the list of the players
 	{
 		ObjectInputStream input = null;
 		ArrayList<Player> players = new ArrayList<Player>();

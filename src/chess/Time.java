@@ -16,6 +16,7 @@ import javax.swing.Timer;
 
 public class Time
 {
+
 	private JLabel label;
 	Timer countdownTimer;
 	int Timerem;
@@ -23,7 +24,7 @@ public class Time
 	{
 		countdownTimer = new Timer(1000, new CountdownTimerListener());
 		this.label = passedLabel;
-		Timerem=Main.timeRemaining;
+		Timerem=Main.getTimeRemaining();
 	}
 	
 	public void start()
@@ -33,7 +34,7 @@ public class Time
 	
 	public void reset()
 	{
-		Timerem=Main.timeRemaining;
+		Timerem=Main.getTimeRemaining();
 	}
 	
     //A function that is called after every second. It updates the timer and takes other necessary actions
@@ -56,7 +57,7 @@ public class Time
 			label.setText("Time's up!");
 			reset();
 			start();
-			Main.Mainboard.changechance();
+			Main.mainBoard.changeMove();
 		}
 
 		private void displayTime() {
@@ -66,4 +67,5 @@ public class Time
 			label.setText(String.valueOf(min)+":"+(sec>=10?String.valueOf(sec):"0"+String.valueOf(sec)));
 		}
 	}
+
 }
