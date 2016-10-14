@@ -9,55 +9,62 @@ import pieces.*;
  * This is the Cell Class. It is the token class of our GUI.
  * There are total of 64 cells that together makes up the Chess Board
  *
- */ 
+ */
 public class Cell extends JPanel implements Cloneable{
-	
-	//Member Variables
 	private static final long serialVersionUID = 1L;
 	private boolean ispossibledestination;
 	private JLabel content;
-	private Piece piece;
-	int x,y;                             //is public because this is to be accessed by all the other class
+	private Piece piece=null;
+	int x, y;                             //is public because this is to be accessed by all the other class
 	private boolean isSelected=false;
 	private boolean ischeck=false;
 	
-	//Constructors
-	public Cell(int x,int y,Piece p)
-	{		
-		this.x=x;
-		this.y=y;
-		
-		setLayout(new BorderLayout());
-	
-	 if((x+y)%2==0)
-	  setBackground(new Color(113,198,113));
-	
-	 else
-	  setBackground(Color.white);
-	 
-	 if(p!=null)
-		 setPiece(p);
+	public void setCoords(int x, int y) {
+		this.x = x;
+		this.y = y;
 	}
 	
-	//A constructor that takes a cell as argument and returns a new cell will the same data but different reference
-	public Cell(Cell cell) throws CloneNotSupportedException
-	{
-		this.x=cell.x;
-		this.y=cell.y;
+	// public void setX(int x) {
+	// 	this.x=x;
+	// }
+
+	// public void setY(int y) {
+	// 	this.y=y;
+	// }
+
+	// public int getX() {
+	// 	return this.x;
+	// }
+
+	// public int getY() {
+	// 	return this.y;
+	// }
+
+	public Cell(int x, int y, Piece p) {		
+		setCoords(x, y);
 		setLayout(new BorderLayout());
+		setBackgroundColor();
+		if(p!=null)
+			setPiece(p);
+	}
+
+	private void setBackgroundColor() {
 		if((x+y)%2==0)
 			setBackground(new Color(113,198,113));
 		else
 			setBackground(Color.white);
-		if(cell.getpiece()!=null)
-		{
-			setPiece(cell.getpiece().getcopy());
-		}
-		else
-			piece=null;
 	}
 	
-	public void setPiece(Piece p)    //Function to inflate a cell with a piece
+	public Cell(Cell cell) throws CloneNotSupportedException
+	{
+		setCoords(cell.x, cell.y);
+		setLayout(new BorderLayout());
+		setBackgroundColor();
+		if(cell.getpiece()!=null)
+			setPiece(cell.getpiece().getcopy());
+	}
+	
+	public void setPiece(Piece p)
 	{
 		piece=p;
 		ImageIcon img=new javax.swing.ImageIcon(this.getClass().getResource(p.getPath()));
@@ -65,27 +72,19 @@ public class Cell extends JPanel implements Cloneable{
 		this.add(content);
 	}
 	
-	public void removePiece()      //Function to remove a piece from the cell
+	public void removePiece()
 	{
-		if (piece instanceof King)
-		{
-			piece=null;
-			this.remove(content);
-		}
-		else
-		{
-			piece=null;
-			this.remove(content);
-		}
+		piece=null;
+		this.remove(content);
 	}
 	
 	
-	public Piece getpiece()    //Function to access piece of a particular cell
+	public Piece getpiece()
 	{
 		return this.piece;
 	}
 	
-	public void select()       //Function to mark a cell indicating it's selection
+	public void select()
 	{
 		this.setBorder(BorderFactory.createLineBorder(Color.red,6));
 		this.isSelected=true;
@@ -96,7 +95,7 @@ public class Cell extends JPanel implements Cloneable{
 		return this.isSelected;
 	}
 	
-	public void deselect()      //Function to delselect the cell
+	public void deselect()
 	{
 		this.setBorder(null);
 		this.isSelected=false;
@@ -125,13 +124,10 @@ public class Cell extends JPanel implements Cloneable{
 		this.ischeck=true;
 	}
 	
-	public void removecheck()   //Function to deselect check
+	public void removecheck()
 	{
 		this.setBorder(null);
-		if((x+y)%2==0)
-			setBackground(new Color(113,198,113));
-		else
-			setBackground(Color.white);
+		setBackgroundColor();
 		this.ischeck=false;
 	}
 	
