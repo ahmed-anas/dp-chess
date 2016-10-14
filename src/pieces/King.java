@@ -189,7 +189,7 @@ public class King extends Piece{
 		return false;
 	}
 	
-	public boolean isAttackedByPawn(Cell state[][])
+	public boolean isAttackedByKing(Cell state[][])
 	{
 		//Checking for attack from the Pawn of opposite color
 		int pox[]={x+1,x+1,x+1,x,x,x-1,x-1,x-1};
@@ -202,21 +202,24 @@ public class King extends Piece{
 						return true;
 					}
 		}
-		if(getcolor()==0)
-		{
-			if(x>0&&y>0&&state[x-1][y-1].getpiece()!=null&&state[x-1][y-1].getpiece().getcolor()==1&&(state[x-1][y-1].getpiece() instanceof Pawn))
-				return true;
-			if(x>0&&y<7&&state[x-1][y+1].getpiece()!=null&&state[x-1][y+1].getpiece().getcolor()==1&&(state[x-1][y+1].getpiece() instanceof Pawn))
-				return true;
-		}
-		else
-		{
-			if(x<7&&y>0&&state[x+1][y-1].getpiece()!=null&&state[x+1][y-1].getpiece().getcolor()==0&&(state[x+1][y-1].getpiece() instanceof Pawn))
-				return true;
-			if(x<7&&y<7&&state[x+1][y+1].getpiece()!=null&&state[x+1][y+1].getpiece().getcolor()==0&&(state[x+1][y+1].getpiece() instanceof Pawn))
-				return true;
-		}
-    	return false;
+		return false;
+	}
+
+	private boolean isValidPosition(int x, int y)
+	{
+		return x>=0&&x<8&&y>=0&&y<8;
+	}
+	public boolean isPawnAttacker(Cell cell){
+		return cell.getpiece()!=null&&cell.getpiece().getcolor()!=this.getcolor()&&(cell.getpiece() instanceof Pawn);
+	}
+	public boolean isPawnAttacker(Cell state[][], int x, int y){
+		return isValidPosition(x, y) && isPawnAttacker(state[x][y]);
+	}
+	public boolean isAttackedByPawn(Cell state[][])
+	{
+		int attackerRow = getcolor()==0?x-1:x+1;
+		
+		return isPawnAttacker(state, attackerRow, y-1) || isPawnAttacker(state, attackerRow, y+1);
 	}
 	
 	
@@ -233,6 +236,9 @@ public class King extends Piece{
 		if(isAttackedByKnight(state))
 			return true;
 		if(isAttackedByPawn(state))
+			return true;
+		
+		if(isAttackedByKing(state))
 			return true;
 		
 		return false;
