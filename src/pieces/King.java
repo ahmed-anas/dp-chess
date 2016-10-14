@@ -9,13 +9,13 @@ public class King extends Piece{
 	private int x,y; //Extra variables for King class to keep a track of king's position
 	
 	//King Constructor
-	public King(String i,String p,int c,int x,int y)
+	public King(String id,String path,int color,int x,int y)
 	{
 		setx(x);
 		sety(y);
-		setId(i);
-		setPath(p);
-		setColor(c);
+		setId(id);
+		setPath(path);
+		setColor(color);
 	}
 	
 	//general value access functions
@@ -50,144 +50,133 @@ public class King extends Piece{
 	}
 	
 	
+	private boolean locationIsEmpty(Cell[][] state, int x, int y){
+		return state[x][y].getpiece()==null;
+	}
 	
-	//Function to check if king is under threat
-	//It checks whether there is any piece of opposite color that can attack king for a given board state
-	public boolean isindanger(Cell state[][])
-    {
-		
-		//Checking for attack from left,right,up and down
-    	for(int i=x+1;i<8;i++)
+
+	private boolean isAttackedFromStraightLine(Cell[][] state, int x, int y) {
+		return ((state[x][y].getpiece() instanceof Rook) || (state[x][y].getpiece() instanceof Queen)) && state[x][y].getpiece().getcolor()!=this.getcolor();
+	}
+
+
+	private boolean isAttackedFromStraightLine(Cell[][] state) {
+		for(int i=x+1;i<8;i++)
     	{
-    		if(state[i][y].getpiece()==null)
+    		if(locationIsEmpty(state, i, y))
     			continue;
-    		else if(state[i][y].getpiece().getcolor()==this.getcolor())
+    		else if (isAttackedFromStraightLine(state, i, y))
+    			return true;
+    		else 
     			break;
-    		else
-    		{
-    			if ((state[i][y].getpiece() instanceof Rook) || (state[i][y].getpiece() instanceof Queen))
-    				return true;
-    			else
-    				break;
-    		}
+    		
     	}
-    	for(int i=x-1;i>=0;i--)
+		for(int i=x-1;i>=0;i--)
     	{
-    		if(state[i][y].getpiece()==null)
+    		if(locationIsEmpty(state, i, y))
     			continue;
-    		else if(state[i][y].getpiece().getcolor()==this.getcolor())
+    		else if (isAttackedFromStraightLine(state, i, y))
+    			return true;
+    		else 
     			break;
-    		else
-    		{
-    			if ((state[i][y].getpiece() instanceof Rook) || (state[i][y].getpiece() instanceof Queen))
-    				return true;
-    			else
-    				break;
-    		}
+    		
     	}
-    	for(int i=y+1;i<8;i++)
+   
+		for(int i=y+1;i<8;i++)
     	{
-    		if(state[x][i].getpiece()==null)
+    		if(locationIsEmpty(state, x, i))
     			continue;
-    		else if(state[x][i].getpiece().getcolor()==this.getcolor())
+    		else if (isAttackedFromStraightLine(state, x, i))
+    			return true;
+    		else 
     			break;
-    		else
-    		{
-    			if ((state[x][i].getpiece() instanceof Rook) || (state[x][i].getpiece() instanceof Queen))
-    				return true;
-    			else
-    				break;
-    		}
+    
     	}
-    	for(int i=y-1;i>=0;i--)
+		   
+		for(int i=y-1;i>=0;i--)
     	{
-    		if(state[x][i].getpiece()==null)
+    		if(locationIsEmpty(state, x, i))
     			continue;
-    		else if(state[x][i].getpiece().getcolor()==this.getcolor())
+    		else if (isAttackedFromStraightLine(state, x, i))
+    			return true;
+    		else 
     			break;
-    		else
-    		{
-    			if ((state[x][i].getpiece() instanceof Rook) || (state[x][i].getpiece() instanceof Queen))
-    				return true;
-    			else
-    				break;
-    		}
+    
     	}
-    	
-    	//checking for attack from diagonal direction
+    	return false;
+	}
+	
+	public boolean isLongRangeDiagonalAttacker(Cell cell)
+	{
+		return cell.getpiece().getcolor()!=this.getcolor() && (cell.getpiece() instanceof Bishop || cell.getpiece() instanceof Queen); 
+	}
+	
+	public boolean isAttackedFromDiagonal(Cell state[][]){
+		//checking for attack from diagonal direction
     	int tempx=x+1,tempy=y-1;
 		while(tempx<8&&tempy>=0)
 		{
-			if(state[tempx][tempy].getpiece()==null)
+			if(locationIsEmpty(state, tempx, tempy))
 			{
 				tempx++;
 				tempy--;
 			}
-			else if(state[tempx][tempy].getpiece().getcolor()==this.getcolor())
-				break;
+			else if(isLongRangeDiagonalAttacker(state[tempx][tempy]))
+				return true;
 			else
 			{
-				if (state[tempx][tempy].getpiece() instanceof Bishop || state[tempx][tempy].getpiece() instanceof Queen)
-    				return true;
-    			else
-    				break;
+				break;
 			}
 		}
 		tempx=x-1;tempy=y+1;
 		while(tempx>=0&&tempy<8)
 		{
-			if(state[tempx][tempy].getpiece()==null)
+			if(locationIsEmpty(state, tempx, tempy))
 			{
 				tempx--;
 				tempy++;
 			}
-			else if(state[tempx][tempy].getpiece().getcolor()==this.getcolor())
-				break;
+			else if(isLongRangeDiagonalAttacker(state[tempx][tempy]))
+				return true;
 			else
 			{
-				if (state[tempx][tempy].getpiece() instanceof Bishop || state[tempx][tempy].getpiece() instanceof Queen)
-    				return true;
-    			else
-    				break;
+				break;
 			}
 		}
 		tempx=x-1;tempy=y-1;
 		while(tempx>=0&&tempy>=0)
 		{
-			if(state[tempx][tempy].getpiece()==null)
+			if(locationIsEmpty(state, tempx, tempy))
 			{
 				tempx--;
 				tempy--;
 			}
-			else if(state[tempx][tempy].getpiece().getcolor()==this.getcolor())
-				break;
+			else if(isLongRangeDiagonalAttacker(state[tempx][tempy]))
+				return true;
 			else
 			{
-				if (state[tempx][tempy].getpiece() instanceof Bishop || state[tempx][tempy].getpiece() instanceof Queen)
-    				return true;
-    			else
-    				break;
+				break;
 			}
 		}
 		tempx=x+1;tempy=y+1;
 		while(tempx<8&&tempy<8)
 		{
-			if(state[tempx][tempy].getpiece()==null)
+			if(locationIsEmpty(state, tempx, tempy))
 			{
 				tempx++;
 				tempy++;
 			}
-			else if(state[tempx][tempy].getpiece().getcolor()==this.getcolor())
-				break;
+			else if(isLongRangeDiagonalAttacker(state[tempx][tempy]))
+				return true;
 			else
 			{
-				if (state[tempx][tempy].getpiece() instanceof Bishop || state[tempx][tempy].getpiece() instanceof Queen)
-    				return true;
-    			else
-    				break;
+				break;
 			}
 		}
-		
+		return false;
+	}
+	
+	public boolean isAttackedByKnight(Cell[][] state){
 		//Checking for attack from the Knight of opposite color
 		int posx[]={x+1,x+1,x+2,x+2,x-1,x-1,x-2,x-2};
 		int posy[]={y-2,y+2,y-1,y+1,y-2,y+2,y-1,y+1};
@@ -197,8 +186,11 @@ public class King extends Piece{
 				{
 					return true;
 				}
-		
-		
+		return false;
+	}
+	
+	public boolean isAttackedByPawn(Cell state[][])
+	{
 		//Checking for attack from the Pawn of opposite color
 		int pox[]={x+1,x+1,x+1,x,x,x-1,x-1,x-1};
 		int poy[]={y-1,y+1,y,y+1,y-1,y+1,y-1,y};
@@ -225,5 +217,24 @@ public class King extends Piece{
 				return true;
 		}
     	return false;
+	}
+	
+	
+	//Function to check if king is under threat
+	//It checks whether there is any piece of opposite color that can attack king for a given board state
+	public boolean isindanger(Cell state[][])
+    {
+		
+		if(isAttackedFromStraightLine(state))
+			return true;
+		if(isAttackedFromDiagonal(state))
+			return true;
+		
+		if(isAttackedByKnight(state))
+			return true;
+		if(isAttackedByPawn(state))
+			return true;
+		
+		return false;
     }
 }
