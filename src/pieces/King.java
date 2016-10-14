@@ -189,19 +189,32 @@ public class King extends Piece{
 		return false;
 	}
 	
-	public boolean isAttackedByKing(Cell state[][])
+	public boolean isKingAttacker(Cell state[][], int x, int y)
 	{
-		//Checking for attack from the Pawn of opposite color
+		return isValidPosition(x, y) && state[x][y].getpiece()!=null && state[x][y].getpiece().getcolor()!=this.getcolor() && (state[x][y].getpiece() instanceof King);
+	}
+	
+	public int[][] getSurroundingPoints(){
 		int pox[]={x+1,x+1,x+1,x,x,x-1,x-1,x-1};
 		int poy[]={y-1,y+1,y,y+1,y-1,y+1,y-1,y};
-		{
-			for(int i=0;i<8;i++)
-				if((pox[i]>=0&&pox[i]<8&&poy[i]>=0&&poy[i]<8))
-					if(state[pox[i]][poy[i]].getpiece()!=null && state[pox[i]][poy[i]].getpiece().getcolor()!=this.getcolor() && (state[pox[i]][poy[i]].getpiece() instanceof King))
-					{
-						return true;
-					}
+		int[][] allPoints = new int[8][2];
+		
+		for(int i = 0; i < 8; i++){
+			allPoints[i][0] = pox[i];
+			allPoints[i][1] = poy[i];
 		}
+		return allPoints;
+		
+	}
+	public boolean isAttackedByKing(Cell state[][])
+	{
+		int surroundingPoints[][] = getSurroundingPoints();
+		
+		for(int i = 0; i < surroundingPoints.length;i++){
+			if(isKingAttacker(state, surroundingPoints[i][0], surroundingPoints[i][1]))
+				return true;
+		}
+		
 		return false;
 	}
 
