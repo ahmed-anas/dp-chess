@@ -10,67 +10,31 @@ import chess.Cell;
  */
 public class Rook extends Piece{
 	
-	//Constructor
-	public Rook(String i,String p,int c)
+	public Rook(String id,String path,int color)
 	{
-		setId(i);
-		setPath(p);
-		setColor(c);
+		setId(id);
+		setPath(path);
+		setColor(color);
 	}
 	
-	//Move function defined
 	public ArrayList<Cell> move(Cell state[][],int x,int y)
 	{
-		//Rook can move only horizontally or vertically
 		possiblemoves.clear();
-		int tempx=x-1;
-		while(tempx>=0)
-		{
-			if(state[tempx][y].getpiece()==null)
-				possiblemoves.add(state[tempx][y]);
-			else if(state[tempx][y].getpiece().getcolor()==this.getcolor())
-				break;
-			else
-			{
-				possiblemoves.add(state[tempx][y]);
-				break;
-			}
-			tempx--;
-		}
-		tempx=x+1;
-		while(tempx<8)
-		{
-			if(state[tempx][y].getpiece()==null)
-				possiblemoves.add(state[tempx][y]);
-			else if(state[tempx][y].getpiece().getcolor()==this.getcolor())
-				break;
-			else
-			{
-				possiblemoves.add(state[tempx][y]);
-				break;
-			}
-			tempx++;
-		}
-		int tempy=y-1;
-		while(tempy>=0)
-		{
-			if(state[x][tempy].getpiece()==null)
-				possiblemoves.add(state[x][tempy]);
-			else if(state[x][tempy].getpiece().getcolor()==this.getcolor())
-				break;
-			else
-			{
-				possiblemoves.add(state[x][tempy]);
-				break;
-			}
-			tempy--;
-		}
+		checkW(state, x, y);
+		checkE(state, x, y);
+		checkS(state, x, y);
+		checkN(state, x, y);
+		return possiblemoves;
+	}
+
+	private void checkN(Cell[][] state, int x, int y) {
+		int tempy;
 		tempy=y+1;
 		while(tempy<8)
 		{
-			if(state[x][tempy].getpiece()==null)
+			if(noPieceAtCell(state, tempy, x))
 				possiblemoves.add(state[x][tempy]);
-			else if(state[x][tempy].getpiece().getcolor()==this.getcolor())
+			else if(ourPieceAtCell(state, tempy, x))
 				break;
 			else
 			{
@@ -79,6 +43,65 @@ public class Rook extends Piece{
 			}
 			tempy++;
 		}
-		return possiblemoves;
+	}
+
+	private void checkS(Cell[][] state, int x, int y) {
+		int tempy=y-1;
+		while(tempy>=0)
+		{
+			if(noPieceAtCell(state, tempy, x))
+				possiblemoves.add(state[x][tempy]);
+			else if(ourPieceAtCell(state, tempy, x))
+				break;
+			else
+			{
+				possiblemoves.add(state[x][tempy]);
+				break;
+			}
+			tempy--;
+		}
+	}
+
+	private void checkE(Cell[][] state, int x, int y) {
+		int tempx;
+		tempx=x+1;
+		while(tempx<8)
+		{
+			if(noPieceAtCell(state, y, tempx))
+				possiblemoves.add(state[tempx][y]);
+			else if(ourPieceAtCell(state, y, tempx))
+				break;
+			else
+			{
+				possiblemoves.add(state[tempx][y]);
+				break;
+			}
+			tempx++;
+		}
+	}
+
+	private void checkW(Cell[][] state, int x, int y) {
+		int tempx=x-1;
+		while(tempx>=0)
+		{
+			if(noPieceAtCell(state, y, tempx))
+				possiblemoves.add(state[tempx][y]);
+			else if(ourPieceAtCell(state, y, tempx))
+				break;
+			else
+			{
+				possiblemoves.add(state[tempx][y]);
+				break;
+			}
+			tempx--;
+		}
+	}
+
+	private boolean ourPieceAtCell(Cell[][] state, int y, int tempx) {
+		return state[tempx][y].getpiece().getcolor()==this.getcolor();
+	}
+
+	private boolean noPieceAtCell(Cell[][] state, int y, int tempx) {
+		return state[tempx][y].getpiece()==null;
 	}
 }
