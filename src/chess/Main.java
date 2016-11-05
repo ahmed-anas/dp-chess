@@ -70,6 +70,7 @@ public class Main
 	private JSlider timeSlider;
 	private BufferedImage image;
 	private Button start, wselect, bselect, WNewPlayer, BNewPlayer;
+	private JButton restart,quit,settings;
 	private static int timeRemaining;
 	private static JFrame chessBoard;
 	
@@ -136,11 +137,7 @@ public class Main
 		chessBoard.setTitle("Chess");
 		content.setBackground(Color.black);
 		content.setLayout(new BorderLayout());
-		controlPanel = new JPanel();
-		controlPanel.setLayout(new GridLayout(3, 3));
-		controlPanel.setBorder(BorderFactory.createTitledBorder(null, "Statistics", TitledBorder.TOP,
-				TitledBorder.CENTER, new Font("Lucida Calligraphy", Font.PLAIN, 20), Color.ORANGE));
-
+		
 		// Defining the Player Box in Control Panel
 		whitePlayerPanel = new JPanel();
 		whitePlayerPanel.setBorder(BorderFactory.createTitledBorder(null, "White Player", TitledBorder.TOP,
@@ -185,9 +182,6 @@ public class Main
 		blackstats.add(new JLabel("Won    :"));
 		whitePlayerPanel.add(whitestats, BorderLayout.WEST);
 		blackPlayerPanel.add(blackstats, BorderLayout.WEST);
-		controlPanel.add(whitePlayerPanel);
-		controlPanel.add(blackPlayerPanel);
-
 		setUpPieces();
 		showPlayer = new JPanel(new FlowLayout());
 		showPlayer.add(timeSlider);
@@ -195,7 +189,7 @@ public class Main
 		start = new Button("Start");
 		start.setBackground(Color.black);
 		start.setForeground(Color.white);
-		start.addActionListener(new START());
+		start.addActionListener(new Start());
 		start.setPreferredSize(new Dimension(120, 40));
 		setTime.setFont(new Font("Arial", Font.BOLD, 16));
 		label = new JLabel("Time Starts now", JLabel.CENTER);
@@ -206,8 +200,6 @@ public class Main
 		time.add(showPlayer);
 		displayTime.add(start);
 		time.add(displayTime);
-		controlPanel.add(time);
-
 		// The Left Layout When Game is inactive
 		temp = new JPanel() {
 			private static final long serialVersionUID = 1L;
@@ -228,7 +220,7 @@ public class Main
 		};
 
 		temp.setMinimumSize(new Dimension(800, 700));
-		controlPanel.setMinimumSize(new Dimension(285, 700));
+		setUpControlPanel();
 		split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, temp, controlPanel);
 
 		content.add(split);
@@ -236,7 +228,30 @@ public class Main
 		chessBoard.setVisible(true);
 		chessBoard.setResizable(false);
 	}
+	private void setUpControlPanel()
+	{
+		controlPanel = new JPanel();
+		controlPanel.setLayout(new GridLayout(4,1));
+		controlPanel.setBorder(BorderFactory.createTitledBorder(null, "Statistics", TitledBorder.TOP,
+				TitledBorder.CENTER, new Font("Lucida Calligraphy", Font.PLAIN, 20), Color.ORANGE));
+		controlPanel.add(whitePlayerPanel);
+		controlPanel.add(blackPlayerPanel);
+		controlPanel.add(time);
+		JPanel options=new JPanel(new FlowLayout(FlowLayout.CENTER));
+		restart=new JButton("Restart");
+		quit=new JButton("Quit");
+		settings=new JButton("Settings");
+		Start buttonHandler=new Start();
+		restart.addActionListener(buttonHandler);
+		quit.addActionListener(buttonHandler);
+		settings.addActionListener(buttonHandler);
+		options.add(settings);
+		options.add(restart);
+		options.add(quit);
+		controlPanel.add(options);
+		controlPanel.setMinimumSize(new Dimension(285, 700));
 
+	}
 	private void setUpPieces()
 	{
 		intializePieces();
@@ -679,21 +694,32 @@ public class Main
 		}
 	}
 	
-	private class START implements ActionListener
+	private class Start implements ActionListener
 	{
-
-		@SuppressWarnings("deprecation")
 		@Override
-		public void actionPerformed(ActionEvent arg0)
+		public void actionPerformed(ActionEvent event)
 		{
-			// TODO Auto-generated method stub
-
-			if (whitePlayer == null || blackPlayer == null)
+			if (event.getSource()==start)
 			{
-				JOptionPane.showMessageDialog(controlPanel, "Fill in the details");
-				return;
+				if (whitePlayer == null || blackPlayer == null)
+				{
+					JOptionPane.showMessageDialog(controlPanel, "Fill in the details");
+					return;
+				}
+				updateUIForChessGame();
 			}
-			updateUIForChessGame();
+			else if (event.getSource()==restart)
+			{
+				restartGame();
+			}
+			else if (event.getSource()==quit)
+			{
+				System.exit(0);
+			}
+			else if(event.getSource()==settings)
+			{
+				
+			}
 		}
 
 		private void updateUIForChessGame()
@@ -702,10 +728,10 @@ public class Main
 			whitePlayer.Update_Player();
 			blackPlayer.updateGamesPlayed();
 			blackPlayer.Update_Player();
-			WNewPlayer.disable();
-			BNewPlayer.disable();
-			wselect.disable();
-			bselect.disable();
+			WNewPlayer.setEnabled(false);
+			BNewPlayer.setEnabled(false);
+			wselect.setEnabled(false);
+			bselect.setEnabled(false);
 			split.remove(temp);
 			split.add(board);
 			showPlayer.remove(timeSlider);
@@ -745,7 +771,6 @@ public class Main
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
-			// TODO Auto-generated method stub
 			tempPlayer = null;
 			String n = (color == WHITE_COLOUR) ? wname : bname;
 			JComboBox<String> jc = (color == WHITE_COLOUR) ? wcombo : bcombo;
