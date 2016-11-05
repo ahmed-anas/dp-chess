@@ -26,8 +26,8 @@ import java.util.ListIterator;
  * Class of Java's Swing Library.
  * 
  */
-
-public class Main extends JFrame implements MouseListener
+ 
+public class Main  
 {
 	private static final long serialVersionUID = 1L;
 	private static final int WHITE_COLOUR=0;
@@ -55,7 +55,7 @@ public class Main extends JFrame implements MouseListener
 	private JLabel label, mov;
 	private static JLabel currentMoveLabel;
 	private Time timer;
-	public static Main mainBoard;
+	private static Main game;
 	private boolean selected = false, end = false;
 	private Container content;
 	private ArrayList<Player> wPlayers, bPlayers;
@@ -71,15 +71,15 @@ public class Main extends JFrame implements MouseListener
 	private BufferedImage image;
 	private Button start, wselect, bselect, WNewPlayer, BNewPlayer;
 	private static int timeRemaining;
-
+	private static JFrame chessBoard;
+	
 	public static void main(String[] args)
 	{
 		startGame();
 	}
 
 	private static void startGame()
-	{
-		
+	{	
 		restartGame();
 	}
 
@@ -121,6 +121,7 @@ public class Main extends JFrame implements MouseListener
 
 	private void setUpUI()
 	{
+		chessBoard = new JFrame();
 		whiteDetails = new JPanel(new GridLayout(3, 3));
 		blackDetails = new JPanel(new GridLayout(3, 3));
 		blackComboPanel = new JPanel();
@@ -129,10 +130,10 @@ public class Main extends JFrame implements MouseListener
 		board.setMinimumSize(new Dimension(800, 700));
 		board.setBorder(BorderFactory.createLoweredBevelBorder());
 		ImageIcon img = new ImageIcon(this.getClass().getResource("icon.png"));
-		this.setIconImage(img.getImage());
-		content = getContentPane();
-		setSize(WIDTH, HEIGHT);
-		setTitle("Chess");
+		chessBoard.setIconImage(img.getImage());
+		content = chessBoard.getContentPane();
+		chessBoard.setSize(WIDTH, HEIGHT);
+		chessBoard.setTitle("Chess");
 		content.setBackground(Color.black);
 		content.setLayout(new BorderLayout());
 		controlPanel = new JPanel();
@@ -231,7 +232,9 @@ public class Main extends JFrame implements MouseListener
 		split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, temp, controlPanel);
 
 		content.add(split);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		chessBoard.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		chessBoard.setVisible(true);
+		chessBoard.setResizable(false);
 	}
 
 	private void setUpPieces()
@@ -240,6 +243,7 @@ public class Main extends JFrame implements MouseListener
 		boardState = new Cell[8][8];
 		Cell cell;
 		Piece P;
+		MouseHandler mouseHandler=new MouseHandler();
 		for (int i = 0; i < 8; i++)
 			for (int j = 0; j < 8; j++)
 			{
@@ -281,7 +285,7 @@ public class Main extends JFrame implements MouseListener
 				else if (i == 6)
 					P = wp[j];
 				cell = new Cell(i, j, P);
-				cell.addMouseListener(this);
+				cell.addMouseListener(mouseHandler);
 				board.add(cell);
 				boardState[i][j] = cell;
 			}
@@ -346,10 +350,10 @@ public class Main extends JFrame implements MouseListener
 		timer.reset();
 		timer.start();
 		showPlayer.remove(currentMoveLabel);
-		if (Main.move == "White")
-			Main.move = "Black";
+		if (move == "White")
+			move = "Black";
 		else
-			Main.move = "White";
+			move = "White";
 		currentMoveLabel.setText(Main.move);
 		showPlayer.add(currentMoveLabel);
 	}
@@ -358,7 +362,10 @@ public class Main extends JFrame implements MouseListener
 	{
 		chance ^= 1;
 	}
-
+	public static Main getGame()
+	{
+		return game;
+	}
 	// A function to retrieve the Black King or White King
 	private Cell[][] getBoardStateCopy()
 	{
@@ -523,9 +530,8 @@ public class Main extends JFrame implements MouseListener
 
 	private static void restartGame()
 	{
-		mainBoard = new Main();
-		mainBoard.setVisible(true);
-		mainBoard.setResizable(false);
+		game=new Main();
+		
 	}
 
 	private void updateEndGameUI()
@@ -548,8 +554,8 @@ public class Main extends JFrame implements MouseListener
 		wselect.setEnabled(false);
 		bselect.setEnabled(false);
 		
-		mainBoard.setEnabled(false);
-		mainBoard.setEnabled(false);
+		chessBoard.setEnabled(false);
+		chessBoard.setEnabled(false);
 		
 	}
 
@@ -563,88 +569,7 @@ public class Main extends JFrame implements MouseListener
 	// These are the abstract function of the parent class. Only relevant method
 	// here is the On-Click Fuction
 	// which is called when the user clicks on a particular cell
-	@Override
-	public void mouseClicked(MouseEvent event)
-	{
-		selectedCell = (Cell) event.getSource();
-		if (previous == null)
-		{
-			if (selectedCell.getpiece() != null)
-			{
-				if (selectedCell.getpiece().getcolor() != chance)
-					return;
-				previous = selectedCell;
-				
-				updateDistinationList();
-				highlightdestinations();
-			}
-		} else
-		{
-			if (selectedCell.x == previous.x && selectedCell.y == previous.y)
-			{
-				selectedCell.deselect();
-				cleandestinations();
-				destinationList.clear();
-				previous = null;
-			} else if (selectedCell.getpiece() == null || previous.getpiece().getcolor() != selectedCell.getpiece().getcolor())
-			{
-				if (selectedCell.ispossibledestination())
-				{
-					if (selectedCell.getpiece() != null)
-						selectedCell.removePiece();
-					selectedCell.setPiece(previous.getpiece());
-					if (previous.ischeck())
-						previous.removecheck();
-					previous.removePiece();
-					if (getOpponentKing().isindanger(boardState))
-					{
-						boardState[getOpponentKing().getx()][getOpponentKing().gety()].setcheck();
-						if (checkmate(getOpponentKing().getcolor()))
-						{
-							previous.deselect();
-							if (previous.getpiece() != null)
-								previous.removePiece();
-							gameend();
-						}
-					}
-					if (getKing(chance).isindanger(boardState) == false)
-						boardState[getKing(chance).getx()][getKing(chance).gety()].removecheck();
-					if (selectedCell.getpiece() instanceof King)
-					{
-						((King) selectedCell.getpiece()).setx(selectedCell.x);
-						((King) selectedCell.getpiece()).sety(selectedCell.y);
-					}
-					changeMove();
-					if (!end)
-					{
-						timer.reset();
-						timer.start();
-					}
-				}
-				if (previous != null)
-				{
-					previous.deselect();
-					previous = null;
-				}
-				cleandestinations();
-				destinationList.clear();
-			} else if (previous.getpiece().getcolor() == selectedCell.getpiece().getcolor())
-			{
-				previous.deselect();
-				cleandestinations();
-				previous = selectedCell;
-				
-				updateDistinationList();
-				highlightdestinations();
-			}
-		}
-		if (selectedCell.getpiece() != null && selectedCell.getpiece() instanceof King)
-		{
-			((King) selectedCell.getpiece()).setx(selectedCell.x);
-			((King) selectedCell.getpiece()).sety(selectedCell.y);
-		}
-	}
-
+	
 	private void updateDistinationList()
 	{
 		selectedCell.select();
@@ -667,31 +592,94 @@ public class Main extends JFrame implements MouseListener
 	}
 
 	// Other Irrelevant abstract function. Only the Click Event is captured.
-	@Override
-	public void mouseEntered(MouseEvent arg0)
+	
+	private class MouseHandler extends MouseAdapter
 	{
-		// TODO Auto-generated method stub
+		@Override
+		public void mouseClicked(MouseEvent event)
+		{
+			super.mouseClicked(event);
+			selectedCell = (Cell) event.getSource();
+			if (previous == null)
+			{
+				if (selectedCell.getpiece() != null)
+				{
+					if (selectedCell.getpiece().getcolor() != chance)
+						return;
+					previous = selectedCell;
+					
+					updateDistinationList();
+					highlightdestinations();
+				}
+			} else
+			{
+				if (selectedCell.x == previous.x && selectedCell.y == previous.y)
+				{
+					selectedCell.deselect();
+					cleandestinations();
+					destinationList.clear();
+					previous = null;
+				} else if (selectedCell.getpiece() == null || previous.getpiece().getcolor() != selectedCell.getpiece().getcolor())
+				{
+					if (selectedCell.ispossibledestination())
+					{
+						if (selectedCell.getpiece() != null)
+							selectedCell.removePiece();
+						selectedCell.setPiece(previous.getpiece());
+						if (previous.ischeck())
+							previous.removecheck();
+						previous.removePiece();
+						if (getOpponentKing().isindanger(boardState))
+						{
+							boardState[getOpponentKing().getx()][getOpponentKing().gety()].setcheck();
+							if (checkmate(getOpponentKing().getcolor()))
+							{
+								previous.deselect();
+								if (previous.getpiece() != null)
+									previous.removePiece();
+								gameend();
+							}
+						}
+						if (getKing(chance).isindanger(boardState) == false)
+							boardState[getKing(chance).getx()][getKing(chance).gety()].removecheck();
+						if (selectedCell.getpiece() instanceof King)
+						{
+							((King) selectedCell.getpiece()).setx(selectedCell.x);
+							((King) selectedCell.getpiece()).sety(selectedCell.y);
+						}
+						changeMove();
+						if (!end)
+						{
+							timer.reset();
+							timer.start();
+						}
+					}
+					if (previous != null)
+					{
+						previous.deselect();
+						previous = null;
+					}
+					cleandestinations();
+					destinationList.clear();
+				} else if (previous.getpiece().getcolor() == selectedCell.getpiece().getcolor())
+				{
+					previous.deselect();
+					cleandestinations();
+					previous = selectedCell;
+					
+					updateDistinationList();
+					highlightdestinations();
+				}
+			}
+			if (selectedCell.getpiece() != null && selectedCell.getpiece() instanceof King)
+			{
+				((King) selectedCell.getpiece()).setx(selectedCell.x);
+				((King) selectedCell.getpiece()).sety(selectedCell.y);
+			}
+		}
 	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0)
-	{
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0)
-	{
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0)
-	{
-		// TODO Auto-generated method stub
-	}
-
-	class START implements ActionListener
+	
+	private class START implements ActionListener
 	{
 
 		@SuppressWarnings("deprecation")
@@ -736,7 +724,7 @@ public class Main extends JFrame implements MouseListener
 		}
 	}
 
-	class TimeChange implements ChangeListener
+	private class TimeChange implements ChangeListener
 	{
 		@Override
 		public void stateChanged(ChangeEvent arg0)
@@ -745,7 +733,7 @@ public class Main extends JFrame implements MouseListener
 		}
 	}
 
-	class SelectHandler implements ActionListener
+	private class SelectHandler implements ActionListener
 	{
 		private int color;
 
@@ -815,7 +803,7 @@ public class Main extends JFrame implements MouseListener
 
 	}
 
-	class Handler implements ActionListener
+	private class Handler implements ActionListener
 	{
 		private int color;
 

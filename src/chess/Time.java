@@ -19,12 +19,12 @@ public class Time
 
 	private JLabel label;
 	Timer countdownTimer;
-	int Timerem;
+	int timeRemmaining;
 	public Time(JLabel passedLabel)
 	{
 		countdownTimer = new Timer(1000, new CountdownTimerListener());
 		this.label = passedLabel;
-		Timerem=Main.getTimeRemaining();
+		timeRemmaining=Main.getTimeRemaining();
 	}
 	
 	public void start()
@@ -34,18 +34,18 @@ public class Time
 	
 	public void reset()
 	{
-		Timerem=Main.getTimeRemaining();
+		timeRemmaining=Main.getTimeRemaining();
 	}
 	
     //A function that is called after every second. It updates the timer and takes other necessary actions
-	class CountdownTimerListener implements ActionListener
+	private class CountdownTimerListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			if (Timerem > 0)
+			if (timeRemmaining > 0)
 			{
 				displayTime();
-				Timerem--;
+				timeRemmaining--;
 			}
 			else
 			{
@@ -57,13 +57,13 @@ public class Time
 			label.setText("Time's up!");
 			reset();
 			start();
-			Main.mainBoard.changeMove();
+			Main.getGame().changeMove();
 		}
 
 		private void displayTime() {
 			int min, sec;
-			min=Timerem/60;
-			sec=Timerem%60;
+			min=timeRemmaining/60;
+			sec=timeRemmaining%60;
 			label.setText(String.valueOf(min)+":"+(sec>=10?String.valueOf(sec):"0"+String.valueOf(sec)));
 		}
 	}
