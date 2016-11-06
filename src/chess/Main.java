@@ -426,16 +426,16 @@ public class Main
 	{
 		Cell newboardstate[][] = getBoardStateCopy();
 
-		if (newboardstate[tocell.x][tocell.y].getpiece() != null)
-			newboardstate[tocell.x][tocell.y].removePiece();
+		if (newboardstate[tocell.getCellX()][tocell.getCellY()].getpiece() != null)
+			newboardstate[tocell.getCellX()][tocell.getCellY()].removePiece();
 
-		newboardstate[tocell.x][tocell.y].setPiece(newboardstate[fromcell.x][fromcell.y].getpiece());
-		if (newboardstate[tocell.x][tocell.y].getpiece() instanceof King)
+		newboardstate[tocell.getCellX()][tocell.getCellY()].setPiece(newboardstate[fromcell.getCellX()][fromcell.getCellY()].getpiece());
+		if (newboardstate[tocell.getCellX()][tocell.getCellY()].getpiece() instanceof King)
 		{
-			((King) (newboardstate[tocell.x][tocell.y].getpiece())).setx(tocell.x);
-			((King) (newboardstate[tocell.x][tocell.y].getpiece())).sety(tocell.y);
+			((King) (newboardstate[tocell.getCellX()][tocell.getCellY()].getpiece())).setx(tocell.getCellX());
+			((King) (newboardstate[tocell.getCellX()][tocell.getCellY()].getpiece())).sety(tocell.getCellY());
 		}
-		newboardstate[fromcell.x][fromcell.y].removePiece();
+		newboardstate[fromcell.getCellX()][fromcell.getCellY()].removePiece();
 		return (((King) (newboardstate[getKing(chance).getx()][getKing(chance).gety()].getpiece())).isindanger(newboardstate));
 	}
 
@@ -452,19 +452,19 @@ public class Main
 			newboardstate=getBoardStateCopy();
 
 			Cell tempc = it.next();
-			if (newboardstate[tempc.x][tempc.y].getpiece() != null)
-				newboardstate[tempc.x][tempc.y].removePiece();
-			newboardstate[tempc.x][tempc.y].setPiece(newboardstate[fromcell.x][fromcell.y].getpiece());
+			if (newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece() != null)
+				newboardstate[tempc.getCellX()][tempc.getCellY()].removePiece();
+			newboardstate[tempc.getCellX()][tempc.getCellY()].setPiece(newboardstate[fromcell.getCellX()][fromcell.getCellY()].getpiece());
 			x = getKing(chance).getx();
 			y = getKing(chance).gety();
-			if (newboardstate[fromcell.x][fromcell.y].getpiece() instanceof King)
+			if (newboardstate[fromcell.getCellX()][fromcell.getCellY()].getpiece() instanceof King)
 			{
-				((King) (newboardstate[tempc.x][tempc.y].getpiece())).setx(tempc.x);
-				((King) (newboardstate[tempc.x][tempc.y].getpiece())).sety(tempc.y);
-				x = tempc.x;
-				y = tempc.y;
+				((King) (newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece())).setx(tempc.getCellX());
+				((King) (newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece())).sety(tempc.getCellY());
+				x = tempc.getCellX();
+				y = tempc.getCellY();
 			}
-			newboardstate[fromcell.x][fromcell.y].removePiece();
+			newboardstate[fromcell.getCellX()][fromcell.getCellY()].removePiece();
 			if ((((King) (newboardstate[x][y].getpiece())).isindanger(newboardstate) == false))
 				newlist.add(tempc);
 		}
@@ -483,19 +483,19 @@ public class Main
 		{
 			newboardstate=getBoardStateCopy();
 			Cell tempc = it.next();
-			if (newboardstate[tempc.x][tempc.y].getpiece() != null)
-				newboardstate[tempc.x][tempc.y].removePiece();
-			newboardstate[tempc.x][tempc.y].setPiece(newboardstate[fromcell.x][fromcell.y].getpiece());
+			if (newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece() != null)
+				newboardstate[tempc.getCellX()][tempc.getCellY()].removePiece();
+			newboardstate[tempc.getCellX()][tempc.getCellY()].setPiece(newboardstate[fromcell.getCellX()][fromcell.getCellY()].getpiece());
 			x = getKing(color).getx();
 			y = getKing(color).gety();
-			if (newboardstate[tempc.x][tempc.y].getpiece() instanceof King)
+			if (newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece() instanceof King)
 			{
-				((King) (newboardstate[tempc.x][tempc.y].getpiece())).setx(tempc.x);
-				((King) (newboardstate[tempc.x][tempc.y].getpiece())).sety(tempc.y);
-				x = tempc.x;
-				y = tempc.y;
+				((King) (newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece())).setx(tempc.getCellX());
+				((King) (newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece())).sety(tempc.getCellY());
+				x = tempc.getCellX();
+				y = tempc.getCellY();
 			}
-			newboardstate[fromcell.x][fromcell.y].removePiece();
+			newboardstate[fromcell.getCellX()][fromcell.getCellY()].removePiece();
 			if ((((King) (newboardstate[x][y].getpiece())).isindanger(newboardstate) == false))
 				newlist.add(tempc);
 		}
@@ -589,7 +589,7 @@ public class Main
 	{
 		selectedCell.select();
 		destinationList.clear();
-		destinationList = selectedCell.getpiece().move(boardState, selectedCell.x, selectedCell.y);
+		destinationList = selectedCell.getpiece().move(boardState, selectedCell.getCellX(), selectedCell.getCellY());
 		if (selectedCell.getpiece() instanceof King)
 			destinationList = filterdestination(selectedCell);
 		else
@@ -628,7 +628,7 @@ public class Main
 				}
 			} else
 			{
-				if (selectedCell.x == previous.x && selectedCell.y == previous.y)
+				if (selectedCell.getCellX() == previous.getCellX() && selectedCell.getCellY() == previous.getCellY())
 				{
 					selectedCell.deselect();
 					cleandestinations();
@@ -659,8 +659,8 @@ public class Main
 							boardState[getKing(chance).getx()][getKing(chance).gety()].removecheck();
 						if (selectedCell.getpiece() instanceof King)
 						{
-							((King) selectedCell.getpiece()).setx(selectedCell.x);
-							((King) selectedCell.getpiece()).sety(selectedCell.y);
+							((King) selectedCell.getpiece()).setx(selectedCell.getCellX());
+							((King) selectedCell.getpiece()).sety(selectedCell.getCellY());
 						}
 						changeMove();
 						if (!end)
@@ -688,8 +688,8 @@ public class Main
 			}
 			if (selectedCell.getpiece() != null && selectedCell.getpiece() instanceof King)
 			{
-				((King) selectedCell.getpiece()).setx(selectedCell.x);
-				((King) selectedCell.getpiece()).sety(selectedCell.y);
+				((King) selectedCell.getpiece()).setx(selectedCell.getCellX());
+				((King) selectedCell.getpiece()).sety(selectedCell.getCellY());
 			}
 		}
 	}
