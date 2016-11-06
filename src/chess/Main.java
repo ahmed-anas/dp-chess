@@ -7,6 +7,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import pieces.*;
+import state.GameSaveAction;
+import state.StateLogger;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -73,6 +76,9 @@ public class Main
 	private JButton restart,quit,settings;
 	private static int timeRemaining;
 	private static JFrame chessBoard;
+	private StateLogger stateLogger = new StateLogger();
+	
+	private JButton saveGame;
 	
 	public static void main(String[] args)
 	{
@@ -241,13 +247,19 @@ public class Main
 		restart=new JButton("Restart");
 		quit=new JButton("Quit");
 		settings=new JButton("Settings");
+		
+		saveGame = new JButton("Save Game");
 		Start buttonHandler=new Start();
 		restart.addActionListener(buttonHandler);
 		quit.addActionListener(buttonHandler);
 		settings.addActionListener(buttonHandler);
+		saveGame.addActionListener(new GameSaveAction());
+		
 		options.add(settings);
 		options.add(restart);
 		options.add(quit);
+		options.add(saveGame);
+		
 		controlPanel.add(options);
 		controlPanel.setMinimumSize(new Dimension(285, 700));
 
@@ -662,7 +674,9 @@ public class Main
 							((King) selectedCell.getpiece()).setx(selectedCell.x);
 							((King) selectedCell.getpiece()).sety(selectedCell.y);
 						}
+						
 						changeMove();
+						stateLogger.addNewMove(previous, selectedCell, selectedCell.getpiece().getcolor());
 						if (!end)
 						{
 							timer.reset();

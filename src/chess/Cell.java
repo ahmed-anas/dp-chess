@@ -10,7 +10,7 @@ import pieces.*;
  * There are total of 64 cells that together makes up the Chess Board
  *
  */
-public class Cell extends JPanel implements Cloneable{
+public class Cell extends JPanel implements Cloneable, java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private boolean ispossibledestination;
 	private JLabel content;
