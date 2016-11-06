@@ -15,13 +15,24 @@ public class Cell extends JPanel implements Cloneable, java.io.Serializable {
 	private boolean ispossibledestination;
 	private JLabel content;
 	private Piece piece=null;
-	int x, y;                             //is public because this is to be accessed by all the other class
+	private int x,y;
 	private boolean isSelected=false;
 	private boolean ischeck=false;
 	
+	public int getCellX()
+	{
+		return x;
+	}
+
+	
+	public int getCellY()
+	{
+		return y;
+	}
+
 	public void setCoords(int x, int y) {
-		this.x = x;
-		this.y = y;
+		this.x=x;
+		this.y=y;
 	}
 
 	public Cell(int x, int y, Piece p) {		
@@ -33,7 +44,7 @@ public class Cell extends JPanel implements Cloneable, java.io.Serializable {
 	}
 
 	private void setBackgroundColor() {
-		if((x+y)%2==0)
+		if((getCellX()+getCellY())%2==0)
 			setBackground(new Color(113,198,113));
 		else
 			setBackground(Color.white);
@@ -41,7 +52,7 @@ public class Cell extends JPanel implements Cloneable, java.io.Serializable {
 	
 	public Cell(Cell cell) throws CloneNotSupportedException
 	{
-		setCoords(cell.x, cell.y);
+		setCoords(cell.getCellX(), cell.getCellY());
 		setLayout(new BorderLayout());
 		setBackgroundColor();
 		if(cell.getpiece()!=null)
@@ -119,4 +130,6 @@ public class Cell extends JPanel implements Cloneable, java.io.Serializable {
 	{
 		return ischeck;
 	}
+
+	
 }
