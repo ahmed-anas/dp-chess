@@ -7,7 +7,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import pieces.*;
-import state.GameSaveAction;
+import state.GameLoadUIAction;
+import state.GameSaveUIAction;
+import state.MoveSequence;
 import state.StateLogger;
 
 import java.awt.*;
@@ -16,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 
 /**
@@ -48,7 +51,12 @@ public class Main
 	private Cell boardState[][];
 	private ArrayList<Cell> destinationList = new ArrayList<Cell>();
 	private Player whitePlayer,blackPlayer;
+
 	private JPanel board;
+	public JPanel getBoard() {
+		return board;
+	}
+
 	private JPanel whiteDetails;
 	private JPanel blackDetails;
 	private JPanel whiteComboPanel;
@@ -76,9 +84,29 @@ public class Main
 	private JButton restart,quit,settings;
 	private static int timeRemaining;
 	private static JFrame chessBoard;
-	private StateLogger stateLogger = new StateLogger();
+	private StateLogger stateLogger;
 	
 	private JButton saveGame;
+	private JButton loadGame;
+	
+
+	public Player getWhitePlayer() {
+		return whitePlayer;
+	}
+
+	public void setWhitePlayer(Player whitePlayer) {
+		this.whitePlayer = whitePlayer;
+		stateLogger.setWhitePlayer(whitePlayer);
+	}
+
+	public Player getBlackPlayer() {
+		return blackPlayer;
+	}
+
+	public void setBlackPlayer(Player blackPlayer) {
+		this.blackPlayer = blackPlayer;
+		stateLogger.setBlackPlayer(blackPlayer);
+	}
 	
 	public static void main(String[] args)
 	{
@@ -120,10 +148,14 @@ public class Main
 	// Constructor
 	private Main()
 	{
+		this.stateLogger = new StateLogger();
 		move = "White";
 		intializeTimer();
 		fetchPlayers();
 		setUpUI();
+		
+		
+		
 	}
 
 	private void setUpUI()
@@ -249,16 +281,19 @@ public class Main
 		settings=new JButton("Settings");
 		
 		saveGame = new JButton("Save Game");
+		loadGame = new JButton("Load Game");
 		Start buttonHandler=new Start();
 		restart.addActionListener(buttonHandler);
 		quit.addActionListener(buttonHandler);
 		settings.addActionListener(buttonHandler);
-		saveGame.addActionListener(new GameSaveAction());
+		saveGame.addActionListener(new GameSaveUIAction(this.stateLogger));
+		loadGame.addActionListener(new GameLoadUIAction(this.stateLogger));
 		
 		options.add(settings);
 		options.add(restart);
 		options.add(quit);
 		options.add(saveGame);
+		options.add(loadGame);
 		
 		controlPanel.add(options);
 		controlPanel.setMinimumSize(new Dimension(285, 700));
@@ -349,9 +384,6 @@ public class Main
 		BNames = Bnames.toArray(BNames);
 	}
 
-	// A function to change the chance from White Player to Black Player or vice
-	// verse
-	// It is made public because it is to be accessed in the Time Class
 	public void changeMove()
 	{
 		int kingXCoordinate=getKing(chance).getx();
@@ -370,6 +402,11 @@ public class Main
 		{
 			setUpNextMove();
 		}
+	}
+	
+	public void changeMoveWithoutTurn(){
+		changeMove();
+		this.stateLogger.switchPlayerWithoutTurn();
 	}
 
 	private void setUpNextMove()
@@ -555,12 +592,13 @@ public class Main
 		restartGame();
 	}
 
-	private static void restartGame()
+	public static void restartGame()
 	{
 		game=new Main();
 		
+		
 	}
-
+	
 	private void updateEndGameUI()
 	{
 		JOptionPane.showMessageDialog(board, "Checkmate!!!\n" + winnerName + " wins");
@@ -585,7 +623,10 @@ public class Main
 		chessBoard.setEnabled(false);
 		
 	}
-
+	
+	public StateLogger getStateLogger(){
+		return this.stateLogger;
+	}
 	private void updateWinner(Player winner)
 	{
 		winner.updateGamesWon();
@@ -620,6 +661,88 @@ public class Main
 
 	// Other Irrelevant abstract function. Only the Click Event is captured.
 	
+	public void doMove(int x, int y){
+		selectedCell = this.boardState[x][y];
+		
+		if (previous == null)
+		{
+			if (selectedCell.getpiece() != null)
+			{
+				if (selectedCell.getpiece().getcolor() != chance)
+					return;
+				previous = selectedCell;
+				
+				updateDistinationList();
+				highlightdestinations();
+			}
+		} else
+		{
+			if (selectedCell.getCellX() == previous.getCellX() && selectedCell.getCellY() == previous.getCellY())
+			{
+				selectedCell.deselect();
+				cleandestinations();
+				destinationList.clear();
+				previous = null;
+			} else if (selectedCell.getpiece() == null || previous.getpiece().getcolor() != selectedCell.getpiece().getcolor())
+			{
+				if (selectedCell.ispossibledestination())
+				{
+					if (selectedCell.getpiece() != null)
+						selectedCell.removePiece();
+					selectedCell.setPiece(previous.getpiece());
+					if (previous.ischeck())
+						previous.removecheck();
+					previous.removePiece();
+					if (getOpponentKing().isindanger(boardState))
+					{
+						boardState[getOpponentKing().getx()][getOpponentKing().gety()].setcheck();
+						if (checkmate(getOpponentKing().getcolor()))
+						{
+							previous.deselect();
+							if (previous.getpiece() != null)
+								previous.removePiece();
+							gameend();
+						}
+					}
+					if (getKing(chance).isindanger(boardState) == false)
+						boardState[getKing(chance).getx()][getKing(chance).gety()].removecheck();
+					if (selectedCell.getpiece() instanceof King)
+					{
+						((King) selectedCell.getpiece()).setx(selectedCell.getCellX());
+						((King) selectedCell.getpiece()).sety(selectedCell.getCellY());
+					}
+					stateLogger.addNewMove(previous, selectedCell);
+					changeMove();
+					
+					if (!end)
+					{
+						timer.reset();
+						timer.start();
+					}
+				}
+				if (previous != null)
+				{
+					previous.deselect();
+					previous = null;
+				}
+				cleandestinations();
+				destinationList.clear();
+			} else if (previous.getpiece().getcolor() == selectedCell.getpiece().getcolor())
+			{
+				previous.deselect();
+				cleandestinations();
+				previous = selectedCell;
+				
+				updateDistinationList();
+				highlightdestinations();
+			}
+		}
+		if (selectedCell.getpiece() != null && selectedCell.getpiece() instanceof King)
+		{
+			((King) selectedCell.getpiece()).setx(selectedCell.getCellX());
+			((King) selectedCell.getpiece()).sety(selectedCell.getCellY());
+		}
+	}
 	private class MouseHandler extends MouseAdapter
 	{
 		@Override
@@ -627,84 +750,7 @@ public class Main
 		{
 			super.mouseClicked(event);
 			selectedCell = (Cell) event.getSource();
-			if (previous == null)
-			{
-				if (selectedCell.getpiece() != null)
-				{
-					if (selectedCell.getpiece().getcolor() != chance)
-						return;
-					previous = selectedCell;
-					
-					updateDistinationList();
-					highlightdestinations();
-				}
-			} else
-			{
-				if (selectedCell.getCellX() == previous.getCellX() && selectedCell.getCellY() == previous.getCellY())
-				{
-					selectedCell.deselect();
-					cleandestinations();
-					destinationList.clear();
-					previous = null;
-				} else if (selectedCell.getpiece() == null || previous.getpiece().getcolor() != selectedCell.getpiece().getcolor())
-				{
-					if (selectedCell.ispossibledestination())
-					{
-						if (selectedCell.getpiece() != null)
-							selectedCell.removePiece();
-						selectedCell.setPiece(previous.getpiece());
-						if (previous.ischeck())
-							previous.removecheck();
-						previous.removePiece();
-						if (getOpponentKing().isindanger(boardState))
-						{
-							boardState[getOpponentKing().getx()][getOpponentKing().gety()].setcheck();
-							if (checkmate(getOpponentKing().getcolor()))
-							{
-								previous.deselect();
-								if (previous.getpiece() != null)
-									previous.removePiece();
-								gameend();
-							}
-						}
-						if (getKing(chance).isindanger(boardState) == false)
-							boardState[getKing(chance).getx()][getKing(chance).gety()].removecheck();
-						if (selectedCell.getpiece() instanceof King)
-						{
-							((King) selectedCell.getpiece()).setx(selectedCell.getCellX());
-							((King) selectedCell.getpiece()).sety(selectedCell.getCellY());
-						}
-						
-						changeMove();
-						stateLogger.addNewMove(previous, selectedCell, selectedCell.getpiece().getcolor());
-						if (!end)
-						{
-							timer.reset();
-							timer.start();
-						}
-					}
-					if (previous != null)
-					{
-						previous.deselect();
-						previous = null;
-					}
-					cleandestinations();
-					destinationList.clear();
-				} else if (previous.getpiece().getcolor() == selectedCell.getpiece().getcolor())
-				{
-					previous.deselect();
-					cleandestinations();
-					previous = selectedCell;
-					
-					updateDistinationList();
-					highlightdestinations();
-				}
-			}
-			if (selectedCell.getpiece() != null && selectedCell.getpiece() instanceof King)
-			{
-				((King) selectedCell.getpiece()).setx(selectedCell.getCellX());
-				((King) selectedCell.getpiece()).sety(selectedCell.getCellY());
-			}
+			doMove(selectedCell.getCellX(), selectedCell.getCellY());
 		}
 	}
 	
@@ -721,6 +767,7 @@ public class Main
 					return;
 				}
 				updateUIForChessGame();
+				updateGamesPlayed();
 			}
 			else if (event.getSource()==restart)
 			{
@@ -736,32 +783,37 @@ public class Main
 			}
 		}
 
-		private void updateUIForChessGame()
-		{
-			whitePlayer.updateGamesPlayed();
-			whitePlayer.Update_Player();
-			blackPlayer.updateGamesPlayed();
-			blackPlayer.Update_Player();
-			WNewPlayer.setEnabled(false);
-			BNewPlayer.setEnabled(false);
-			wselect.setEnabled(false);
-			bselect.setEnabled(false);
-			split.remove(temp);
-			split.add(board);
-			showPlayer.remove(timeSlider);
-			mov = new JLabel("Move:");
-			mov.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
-			mov.setForeground(Color.red);
-			showPlayer.add(mov);
-			currentMoveLabel = new JLabel(move);
-			currentMoveLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
-			currentMoveLabel.setForeground(Color.blue);
-			showPlayer.add(currentMoveLabel);
-			displayTime.remove(start);
-			displayTime.add(label);
-			timer = new Time(label);
-			timer.start();
-		}
+		
+	}
+	public void updateUIForChessGame()
+	{
+		
+		WNewPlayer.setEnabled(false);
+		BNewPlayer.setEnabled(false);
+		wselect.setEnabled(false);
+		bselect.setEnabled(false);
+		split.remove(temp);
+		split.add(board);
+		showPlayer.remove(timeSlider);
+		mov = new JLabel("Move:");
+		mov.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
+		mov.setForeground(Color.red);
+		showPlayer.add(mov);
+		currentMoveLabel = new JLabel(move);
+		currentMoveLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
+		currentMoveLabel.setForeground(Color.blue);
+		showPlayer.add(currentMoveLabel);
+		displayTime.remove(start);
+		displayTime.add(label);
+		timer = new Time(label);
+		timer.start();
+	}
+	
+	private void updateGamesPlayed(){
+		whitePlayer.updateGamesPlayed();
+		whitePlayer.Update_Player();
+		blackPlayer.updateGamesPlayed();
+		blackPlayer.Update_Player();
 	}
 
 	private class TimeChange implements ChangeListener
@@ -823,9 +875,14 @@ public class Main
 			if (tempPlayer == null)
 				return;
 			if (color == WHITE_COLOUR)
-				whitePlayer = tempPlayer;
+			{
+				setWhitePlayer(tempPlayer);
+			}
 			else
-				blackPlayer = tempPlayer;
+			{
+				setBlackPlayer(tempPlayer);
+			}
+				
 			bPlayers = opl;
 			ojc.removeAllItems();
 			for (Player s : opl)
@@ -879,9 +936,14 @@ public class Main
 					Player tem = new Player(n);
 					tem.Update_Player();
 					if (color == 0)
-						whitePlayer = tem;
+					{
+						setWhitePlayer(tem);
+					}
 					else
-						blackPlayer = tem;
+					{
+						setBlackPlayer(tem);
+					}
+						
 				} else
 					return;
 			} else
@@ -917,5 +979,6 @@ public class Main
 	{
 		return timeRemaining;
 	}
+
 	
 }

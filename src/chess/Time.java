@@ -57,7 +57,9 @@ public class Time
 			label.setText("Time's up!");
 			reset();
 			start();
-			Main.getGame().changeMove();
+			Main game = Main.getGame();
+			game.changeMoveWithoutTurn();
+			
 		}
 
 		private void displayTime() {
