@@ -17,91 +17,96 @@ public class Rook extends Piece{
 		setColor(color);
 	}
 	
-	public ArrayList<Cell> move(Cell state[][],int x,int y)
+	public ArrayList<Cell> move(Cell state[][], Coordinates position)
 	{
 		possiblemoves.clear();
-		checkW(state, x, y);
-		checkE(state, x, y);
-		checkS(state, x, y);
-		checkN(state, x, y);
+		checkW(state, position);
+		checkE(state, position);
+		checkS(state, position);
+		checkN(state, position);
 		return possiblemoves;
 	}
 
-	private void checkN(Cell[][] state, int x, int y) {
-		int tempy;
-		tempy=y+1;
-		while(tempy<8)
+	private void checkN(Cell[][] state, Coordinates position) {
+		
+		Coordinates checkPosition = position.clone();
+		checkPosition.increaseY();
+		
+		while(checkPosition.isValid())
 		{
-			if(noPieceAtCell(state, tempy, x))
-				possiblemoves.add(state[x][tempy]);
-			else if(ourPieceAtCell(state, tempy, x))
+			if(noPieceAtCell(state, checkPosition))
+				possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
+			else if(ourPieceAtCell(state, checkPosition))
 				break;
 			else
 			{
-				possiblemoves.add(state[x][tempy]);
+				possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
 				break;
 			}
-			tempy++;
+			checkPosition.increaseY();
 		}
 	}
 
-	private void checkS(Cell[][] state, int x, int y) {
-		int tempy=y-1;
-		while(tempy>=0)
+	private void checkS(Cell[][] state, Coordinates position) {
+		Coordinates checkPosition = position.clone();
+		checkPosition.decreaseY();
+		while(checkPosition.isValid())
 		{
-			if(noPieceAtCell(state, tempy, x))
-				possiblemoves.add(state[x][tempy]);
-			else if(ourPieceAtCell(state, tempy, x))
+			if(noPieceAtCell(state, checkPosition))
+				possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
+			else if(ourPieceAtCell(state, checkPosition))
 				break;
 			else
 			{
-				possiblemoves.add(state[x][tempy]);
+				possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
 				break;
 			}
-			tempy--;
+			checkPosition.decreaseY();
 		}
 	}
 
-	private void checkE(Cell[][] state, int x, int y) {
-		int tempx;
-		tempx=x+1;
-		while(tempx<8)
+	private void checkE(Cell[][] state, Coordinates position) {
+		Coordinates checkPosition = position.clone();
+		checkPosition.increaseX();
+		
+		while(checkPosition.isValid())
 		{
-			if(noPieceAtCell(state, y, tempx))
-				possiblemoves.add(state[tempx][y]);
-			else if(ourPieceAtCell(state, y, tempx))
+			if(noPieceAtCell(state, checkPosition))
+				possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
+			else if(ourPieceAtCell(state, checkPosition))
 				break;
 			else
 			{
-				possiblemoves.add(state[tempx][y]);
+				possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
 				break;
 			}
-			tempx++;
+			checkPosition.increaseX();
 		}
 	}
 
-	private void checkW(Cell[][] state, int x, int y) {
-		int tempx=x-1;
-		while(tempx>=0)
+	private void checkW(Cell[][] state, Coordinates position) {
+		Coordinates checkPosition = position.clone();
+		checkPosition.decreaseX();
+		while(checkPosition.isValid())
 		{
-			if(noPieceAtCell(state, y, tempx))
-				possiblemoves.add(state[tempx][y]);
-			else if(ourPieceAtCell(state, y, tempx))
+			if(noPieceAtCell(state, checkPosition))
+				possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
+			else if(ourPieceAtCell(state, checkPosition))
 				break;
 			else
 			{
-				possiblemoves.add(state[tempx][y]);
+				possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
 				break;
 			}
-			tempx--;
+			checkPosition.decreaseX();;
 		}
 	}
 
-	private boolean ourPieceAtCell(Cell[][] state, int y, int tempx) {
-		return state[tempx][y].getpiece().getcolor()==this.getcolor();
+	private boolean ourPieceAtCell(Cell[][] state, Coordinates position) {
+		return state[position.getX()][position.getY()].getpiece().getcolor()==this.getcolor();
 	}
 
-	private boolean noPieceAtCell(Cell[][] state, int y, int tempx) {
-		return state[tempx][y].getpiece()==null;
+	private boolean noPieceAtCell(Cell[][] state, Coordinates position) {
+		return state[position.getX()][position.getY()].getpiece()==null;
 	}
 }

@@ -20,102 +20,107 @@ public class Bishop extends Piece{
 		setColor(color);
 	}
 	
-	public ArrayList<Cell> move(Cell state[][],int x,int y)
+	public ArrayList<Cell> move(Cell state[][],Coordinates newPosition)
 	{
 		//Bishop can Move diagonally in all 4 direction (NW,NE,SW,SE)
 		possiblemoves.clear();
-		checkSE(state, x, y);
-		checkNW(state, x, y);
-		checkSW(state, x, y);
-		checkNE(state, x, y);
+		checkSE(state, newPosition);
+		checkNW(state, newPosition);
+		checkSW(state, newPosition);
+		checkNE(state, newPosition);
 		return possiblemoves;
 	}
 
-	private void checkNE(Cell[][] state, int x, int y) {
-		int tempx;
-		int tempy;
-		tempx=x+1;tempy=y+1;
-		while(tempx<8&&tempy<8)
+	private void checkNE(Cell[][] state, Coordinates position) {
+		
+		Coordinates checkPosition = position.clone();
+		checkPosition.increaseX();
+		checkPosition.increaseY();
+		while(checkPosition.getX()<8&&checkPosition.getY()<8)
 		{
-			if(noPieceAtCell(state, tempx, tempy))
-				possiblemoves.add(state[tempx][tempy]);
-			else if(ourPieceAtCell(state, tempx, tempy))
+			if(noPieceAtCell(state, checkPosition))
+				possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
+			else if(ourPieceAtCell(state, checkPosition))
 				break;
 			else
 			{
-				possiblemoves.add(state[tempx][tempy]);
+				possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
 				break;
 			}
-			tempx++;
-			tempy++;
+			checkPosition.increaseX();
+			checkPosition.increaseY();
 		}
 	}
 
-	private void checkSW(Cell[][] state, int x, int y) {
-		int tempx;
-		int tempy;
-		tempx=x-1;tempy=y-1;
-		while(tempx>=0&&tempy>=0)
+	private void checkSW(Cell[][] state, Coordinates position) {
+		
+		Coordinates checkPosition = position.clone();
+		checkPosition.decreaseX();
+		checkPosition.decreaseY();
+		while(checkPosition.getX()>=0&&checkPosition.getY()>=0)
 		{
-			if(noPieceAtCell(state, tempx, tempy))
-				possiblemoves.add(state[tempx][tempy]);
-			else if(ourPieceAtCell(state, tempx, tempy))
+			if(noPieceAtCell(state, checkPosition))
+				possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
+			else if(ourPieceAtCell(state, checkPosition))
 				break;
 			else
 			{
-				possiblemoves.add(state[tempx][tempy]);
+				possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
 				break;
 			}
-			tempx--;
-			tempy--;
+			checkPosition.decreaseX();
+			checkPosition.decreaseY();
 		}
 	}
 
-	private void checkNW(Cell[][] state, int x, int y) {
-		int tempx;
-		int tempy;
-		tempx=x-1;tempy=y+1;
-		while(tempx>=0&&tempy<8)
+	private void checkNW(Cell[][] state, Coordinates position) {
+		Coordinates checkPosition = position.clone();
+		
+		checkPosition.decreaseX();
+		checkPosition.increaseY();
+		while(checkPosition.getX()>=0&&checkPosition.getY()<8)
 		{
-			if(noPieceAtCell(state, tempx, tempy))
-				possiblemoves.add(state[tempx][tempy]);
-			else if(ourPieceAtCell(state, tempx, tempy))
+			if(noPieceAtCell(state, checkPosition))
+				possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
+			else if(ourPieceAtCell(state, checkPosition))
 				break;
 			else
 			{
-				possiblemoves.add(state[tempx][tempy]);
+				possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
 				break;
 			}
-			tempx--;
-			tempy++;
+			checkPosition.decreaseX();
+			checkPosition.increaseY();
 		}
 	}
 
-	private void checkSE(Cell[][] state, int x, int y) {
-		int tempx=x+1,tempy=y-1;
-		while(tempx<8 && tempy>=0)
+	private void checkSE(Cell[][] state, Coordinates position) {
+		
+		Coordinates nextPosition = new Coordinates(position.getX() + 1, position.getY() - 1);
+		while(nextPosition.getX()<8 && nextPosition.getY()>=0)
 		{
-			if(noPieceAtCell(state, tempx, tempy))
+			if(noPieceAtCell(state, nextPosition))
 			{
-				possiblemoves.add(state[tempx][tempy]);
+				possiblemoves.add(state[nextPosition.getX()][nextPosition.getY()]);
 			}
-			else if(ourPieceAtCell(state, tempx, tempy))
+			else if(ourPieceAtCell(state, nextPosition))
 				break;
 			else
 			{
-				possiblemoves.add(state[tempx][tempy]);
+				possiblemoves.add(state[nextPosition.getX()][nextPosition.getY()]);
 				break;
 			}
-			tempx++;
-			tempy--;
+			nextPosition.increaseX();
+			nextPosition.decreaseY();
+			
 		}
 	}
 
-	private boolean ourPieceAtCell(Cell[][] state, int tempx, int tempy) {
-		return state[tempx][tempy].getpiece().getcolor()==this.getcolor();
+	private boolean ourPieceAtCell(Cell[][] state, Coordinates position) {
+		return state[position.getX()][position.getY()].getpiece().getcolor()==this.getcolor();
 	}
 
-	private boolean noPieceAtCell(Cell[][] state, int tempx, int tempy) {
-		return state[tempx][tempy].getpiece()==null;
+	private boolean noPieceAtCell(Cell[][] state, Coordinates position) {
+		return state[position.getX()][position.getY()].getpiece()==null;
 	}
 }

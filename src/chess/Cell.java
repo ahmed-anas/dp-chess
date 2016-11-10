@@ -19,6 +19,9 @@ public class Cell extends JPanel implements Cloneable, java.io.Serializable {
 	private boolean isSelected=false;
 	private boolean ischeck=false;
 	
+	public Coordinates getCoordinates(){
+		return new Coordinates(this.getCellX(), this.getCellY());
+	}
 	public int getCellX()
 	{
 		return x;

@@ -48,7 +48,7 @@ public class Main
 	private static King wk, bk;
 	private Cell selectedCell, previous;
 	private int chance = 0;
-	private Cell boardState[][];
+	private Board data = new Board();
 	private ArrayList<Cell> destinationList = new ArrayList<Cell>();
 	private Player whitePlayer,blackPlayer;
 
@@ -302,7 +302,7 @@ public class Main
 	private void setUpPieces()
 	{
 		intializePieces();
-		boardState = new Cell[8][8];
+		data.setBoardState(new Cell[8][8]);
 		Cell cell;
 		Piece P;
 		MouseHandler mouseHandler=new MouseHandler();
@@ -349,7 +349,7 @@ public class Main
 				cell = new Cell(i, j, P);
 				cell.addMouseListener(mouseHandler);
 				board.add(cell);
-				boardState[i][j] = cell;
+				data.getBoardState()[i][j] = cell;
 			}
 	}
 
@@ -389,7 +389,7 @@ public class Main
 		int kingXCoordinate=getKing(chance).getx();
 		int kingYCoordinate=getKing(chance).gety();
 		toggleMove();
-		if (boardState[kingXCoordinate][kingYCoordinate].ischeck())
+		if (data.getBoardState()[kingXCoordinate][kingYCoordinate].ischeck())
 		{
 			gameend();
 		}	
@@ -439,7 +439,7 @@ public class Main
 			{
 				try
 				{
-					newboardstate[i][j] = new Cell(boardState[i][j]);
+					newboardstate[i][j] = new Cell(data.getBoardState()[i][j]);
 				} catch (CloneNotSupportedException e)
 				{
 					e.printStackTrace();
@@ -560,11 +560,11 @@ public class Main
 		{
 			for (int j = 0; j < 8; j++)
 			{
-				if (boardState[i][j].getpiece() != null && boardState[i][j].getpiece().getcolor() == color)
+				if (data.getBoardState()[i][j].getpiece() != null && data.getBoardState()[i][j].getpiece().getcolor() == color)
 				{
 					dlist.clear();
-					dlist = boardState[i][j].getpiece().move(boardState, i, j);
-					dlist = incheckfilter(dlist, boardState[i][j], color);
+					dlist = data.getBoardState()[i][j].getpiece().move(data.getBoardState(), new Coordinates(i,j));
+					dlist = incheckfilter(dlist, data.getBoardState()[i][j], color);
 					if (dlist.size() != 0)
 						return false;
 				}
@@ -642,12 +642,12 @@ public class Main
 	{
 		selectedCell.select();
 		destinationList.clear();
-		destinationList = selectedCell.getpiece().move(boardState, selectedCell.getCellX(), selectedCell.getCellY());
+		destinationList = selectedCell.getpiece().move(data.getBoardState(), selectedCell.getCoordinates());
 		if (selectedCell.getpiece() instanceof King)
 			destinationList = filterdestination(selectedCell);
 		else
 		{
-			if (boardState[getKing(chance).getx()][getKing(chance).gety()].ischeck())
+			if (data.getBoardState()[getKing(chance).getx()][getKing(chance).gety()].ischeck())
 				destinationList = new ArrayList<Cell>(filterdestination(selectedCell));
 			else if (destinationList.isEmpty() == false && willKingBeInDanger(selectedCell, destinationList.get(0)))
 				destinationList.clear();
@@ -662,7 +662,7 @@ public class Main
 	// Other Irrelevant abstract function. Only the Click Event is captured.
 	
 	public void doMove(int x, int y){
-		selectedCell = this.boardState[x][y];
+		selectedCell = this.data.getBoardState()[x][y];
 		
 		if (previous == null)
 		{
@@ -693,9 +693,9 @@ public class Main
 					if (previous.ischeck())
 						previous.removecheck();
 					previous.removePiece();
-					if (getOpponentKing().isindanger(boardState))
+					if (getOpponentKing().isindanger(data.getBoardState()))
 					{
-						boardState[getOpponentKing().getx()][getOpponentKing().gety()].setcheck();
+						data.getBoardState()[getOpponentKing().getx()][getOpponentKing().gety()].setcheck();
 						if (checkmate(getOpponentKing().getcolor()))
 						{
 							previous.deselect();
@@ -704,8 +704,8 @@ public class Main
 							gameend();
 						}
 					}
-					if (getKing(chance).isindanger(boardState) == false)
-						boardState[getKing(chance).getx()][getKing(chance).gety()].removecheck();
+					if (getKing(chance).isindanger(data.getBoardState()) == false)
+						data.getBoardState()[getKing(chance).getx()][getKing(chance).gety()].removecheck();
 					if (selectedCell.getpiece() instanceof King)
 					{
 						((King) selectedCell.getpiece()).setx(selectedCell.getCellX());

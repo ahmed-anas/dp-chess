@@ -18,69 +18,91 @@ public class Pawn extends Piece{
 	}
 	
 	//Move Function Overridden
-	public ArrayList<Cell> move(Cell state[][],int x,int y)
+	public ArrayList<Cell> move(Cell state[][], Coordinates position)
 	{
 		
 		possiblemoves.clear();
 		if(white())
 		{
-			if(x==0)
+			if(position.getX()==0)
 				return possiblemoves;
-			handleFirstWhiteMove(state, x, y);
-			addKillMovesWhite(state, x, y);
+			handleFirstWhiteMove(state, position);
+			addKillMovesWhite(state, position);
 		}
 		else
 		{
-			if(x==8)
+			if(position.getX()==8)
 				return possiblemoves;
-			handleFirstBlackMove(state, x, y);
-			addKillMovesBlack(state, x, y);
+			handleFirstBlackMove(state, position);
+			addKillMovesBlack(state, position);
 		}
 		return possiblemoves;
 	}
 
-	private void handleFirstWhiteMove(Cell[][] state, int x, int y) {
-		int tempx = x-1;
-		if(noPieceAtCell(state, y, tempx))
+	private void handleFirstWhiteMove(Cell[][] state, Coordinates position) {
+		
+		Coordinates checkPosition = position.clone();
+		checkPosition.decreaseX();
+		
+		if(noPieceAtCell(state, checkPosition))
 		{
-			possiblemoves.add(state[x-1][y]);
-			if(x==6)
+			possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
+			if(position.getX()==6)
 			{
-				if(state[4][y].getpiece()==null)
-					possiblemoves.add(state[4][y]);
+				if(state[4][position.getY()].getpiece()==null)
+					possiblemoves.add(state[4][position.getY()]);
 			}
 		}
 	}
 
-	private void handleFirstBlackMove(Cell[][] state, int x, int y) {
-		int tempx = x+1;
-		if(noPieceAtCell(state, y, tempx))
+	private void handleFirstBlackMove(Cell[][] state, Coordinates position) {
+		Coordinates checkPosition = position.clone();
+		checkPosition.increaseX();
+		if(noPieceAtCell(state, checkPosition))
 		{
-			possiblemoves.add(state[x+1][y]);
-			if(x==1)
+			possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
+			if(position.getX()==1)
 			{
-				if(state[3][y].getpiece()==null)
-					possiblemoves.add(state[3][y]);
+				if(state[3][position.getY()].getpiece()==null)
+					possiblemoves.add(state[3][position.getY()]);
 			}
 		}
 	}
 
-	private void addKillMovesBlack(Cell[][] state, int x, int y) {
-		if((y>0)&&(state[x+1][y-1].getpiece()!=null)&&(state[x+1][y-1].getpiece().getcolor()!=this.getcolor()))
-			possiblemoves.add(state[x+1][y-1]);
-		if((y<7)&&(state[x+1][y+1].getpiece()!=null)&&(state[x+1][y+1].getpiece().getcolor()!=this.getcolor()))
-			possiblemoves.add(state[x+1][y+1]);
+	private void addKillMovesBlack(Cell[][] state, Coordinates position) {
+		
+		Coordinates killPositionFirst = position.clone();
+		killPositionFirst.increaseX();
+		killPositionFirst.decreaseY();
+		
+		Coordinates killPositionSeconds = position.clone();
+		killPositionSeconds.increaseX();
+		killPositionSeconds.increaseY();
+		
+		if((killPositionFirst.getY()>0)&&(state[killPositionFirst.getX()][killPositionFirst.getY()].getpiece()!=null)&&(state[killPositionFirst.getX()][killPositionFirst.getY()].getpiece().getcolor()!=this.getcolor()))
+			possiblemoves.add(state[killPositionFirst.getX()][killPositionFirst.getY()]);
+		
+		if((killPositionSeconds.getY()<7)&&(state[killPositionSeconds.getX()][killPositionSeconds.getY()].getpiece()!=null)&&(state[killPositionSeconds.getX()][killPositionSeconds.getY()].getpiece().getcolor()!=this.getcolor()))
+			possiblemoves.add(state[killPositionSeconds.getX()][killPositionSeconds.getY()]);
 	}
 
-	private void addKillMovesWhite(Cell[][] state, int x, int y) {
-		if((y>0)&&(state[x-1][y-1].getpiece()!=null)&&(state[x-1][y-1].getpiece().getcolor()!=this.getcolor()))
-			possiblemoves.add(state[x-1][y-1]);
-		if((y<7)&&(state[x-1][y+1].getpiece()!=null)&&(state[x-1][y+1].getpiece().getcolor()!=this.getcolor()))
-			possiblemoves.add(state[x-1][y+1]);
+	private void addKillMovesWhite(Cell[][] state, Coordinates position) {
+		Coordinates killPositionFirst = position.clone();
+		killPositionFirst.decreaseX();
+		killPositionFirst.decreaseY();
+		
+		Coordinates killPositionSeconds = position.clone();
+		killPositionSeconds.decreaseX();
+		killPositionSeconds.increaseY();
+		
+		if((killPositionFirst.getY()>0)&&(state[killPositionFirst.getX()][killPositionFirst.getY()].getpiece()!=null)&&(state[killPositionFirst.getX()][killPositionFirst.getY()].getpiece().getcolor()!=this.getcolor()))
+			possiblemoves.add(state[killPositionFirst.getX()][killPositionFirst.getY()]);
+		if((killPositionSeconds.getY()<7)&&(state[killPositionSeconds.getX()][killPositionSeconds.getY()].getpiece()!=null)&&(state[killPositionSeconds.getX()][killPositionSeconds.getY()].getpiece().getcolor()!=this.getcolor()))
+			possiblemoves.add(state[killPositionSeconds.getX()][killPositionSeconds.getY()]);
 	}
 
-	private boolean noPieceAtCell(Cell[][] state, int y, int tempx) {
-		return state[tempx][y].getpiece()==null;
+	private boolean noPieceAtCell(Cell[][] state, Coordinates position) {
+		return state[position.getX()][position.getY()].getpiece()==null;
 	}
 
 	private boolean white() {
