@@ -402,6 +402,8 @@ public class Main
 		{
 			setUpNextMove();
 		}
+		
+		SoundPlayer.playBeep();
 	}
 	
 	public void changeMoveWithoutTurn(){
@@ -594,6 +596,8 @@ public class Main
 
 	public static void restartGame()
 	{
+		if(chessBoard!=null)
+			chessBoard.dispose();
 		game=new Main();
 		
 		

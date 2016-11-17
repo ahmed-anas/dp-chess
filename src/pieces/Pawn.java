@@ -79,10 +79,10 @@ public class Pawn extends Piece{
 		killPositionSeconds.increaseX();
 		killPositionSeconds.increaseY();
 		
-		if((killPositionFirst.getY()>0)&&(state[killPositionFirst.getX()][killPositionFirst.getY()].getpiece()!=null)&&(state[killPositionFirst.getX()][killPositionFirst.getY()].getpiece().getcolor()!=this.getcolor()))
+		if((killPositionFirst.isValid())&&(state[killPositionFirst.getX()][killPositionFirst.getY()].getpiece()!=null)&&(state[killPositionFirst.getX()][killPositionFirst.getY()].getpiece().getcolor()!=this.getcolor()))
 			possiblemoves.add(state[killPositionFirst.getX()][killPositionFirst.getY()]);
 		
-		if((killPositionSeconds.getY()<7)&&(state[killPositionSeconds.getX()][killPositionSeconds.getY()].getpiece()!=null)&&(state[killPositionSeconds.getX()][killPositionSeconds.getY()].getpiece().getcolor()!=this.getcolor()))
+		if((killPositionSeconds.isValid())&&(state[killPositionSeconds.getX()][killPositionSeconds.getY()].getpiece()!=null)&&(state[killPositionSeconds.getX()][killPositionSeconds.getY()].getpiece().getcolor()!=this.getcolor()))
 			possiblemoves.add(state[killPositionSeconds.getX()][killPositionSeconds.getY()]);
 	}
 
@@ -95,9 +95,9 @@ public class Pawn extends Piece{
 		killPositionSeconds.decreaseX();
 		killPositionSeconds.increaseY();
 		
-		if((killPositionFirst.getY()>0)&&(state[killPositionFirst.getX()][killPositionFirst.getY()].getpiece()!=null)&&(state[killPositionFirst.getX()][killPositionFirst.getY()].getpiece().getcolor()!=this.getcolor()))
+		if((killPositionFirst.isValid())&&(state[killPositionFirst.getX()][killPositionFirst.getY()].getpiece()!=null)&&(state[killPositionFirst.getX()][killPositionFirst.getY()].getpiece().getcolor()!=this.getcolor()))
 			possiblemoves.add(state[killPositionFirst.getX()][killPositionFirst.getY()]);
-		if((killPositionSeconds.getY()<7)&&(state[killPositionSeconds.getX()][killPositionSeconds.getY()].getpiece()!=null)&&(state[killPositionSeconds.getX()][killPositionSeconds.getY()].getpiece().getcolor()!=this.getcolor()))
+		if((killPositionSeconds.isValid())&&(state[killPositionSeconds.getX()][killPositionSeconds.getY()].getpiece()!=null)&&(state[killPositionSeconds.getX()][killPositionSeconds.getY()].getpiece().getcolor()!=this.getcolor()))
 			possiblemoves.add(state[killPositionSeconds.getX()][killPositionSeconds.getY()]);
 	}
 
