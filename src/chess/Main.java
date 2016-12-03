@@ -152,10 +152,7 @@ public class Main implements TimeObserver
 		move = "White";
 		intializeTimer();
 		fetchPlayers();
-		setUpUI();
-		
-		
-		
+		setUpUI();	
 	}
 
 	private void setUpUI()

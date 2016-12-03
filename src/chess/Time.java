@@ -58,7 +58,8 @@ public class Time implements TimeSubject
 			label.setText("Time's up!");
 			reset();
 			start();
-			notifyObserver();			
+			notifyObserver();
+						
 		}
 
 		private void displayTime() {
