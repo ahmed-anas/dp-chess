@@ -33,7 +33,7 @@ import java.util.ListIterator;
  * 
  */
  
-public class Main  
+public class Main implements TimeObserver
 {
 	private static final long serialVersionUID = 1L;
 	private static final int WHITE_COLOUR=0;
@@ -152,10 +152,7 @@ public class Main
 		move = "White";
 		intializeTimer();
 		fetchPlayers();
-		setUpUI();
-		
-		
-		
+		setUpUI();	
 	}
 
 	private void setUpUI()
@@ -982,6 +979,12 @@ public class Main
 	public static int getTimeRemaining()
 	{
 		return timeRemaining;
+	}
+
+	@Override
+	public void update()
+	{
+		changeMoveWithoutTurn();
 	}
 
 	
