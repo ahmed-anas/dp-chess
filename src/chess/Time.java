@@ -14,12 +14,13 @@ import javax.swing.Timer;
  *
  */
 
-public class Time
+public class Time implements TimeSubject
 {
 
 	private JLabel label;
 	Timer countdownTimer;
 	int timeRemmaining;
+	TimeObserver timeObserver;
 	public Time(JLabel passedLabel)
 	{
 		countdownTimer = new Timer(1000, new CountdownTimerListener());
@@ -57,9 +58,7 @@ public class Time
 			label.setText("Time's up!");
 			reset();
 			start();
-			Main game = Main.getGame();
-			game.changeMoveWithoutTurn();
-			
+			notifyObserver();			
 		}
 
 		private void displayTime() {
@@ -68,6 +67,18 @@ public class Time
 			sec=timeRemmaining%60;
 			label.setText(String.valueOf(min)+":"+(sec>=10?String.valueOf(sec):"0"+String.valueOf(sec)));
 		}
+	}
+
+	@Override
+	public void notifyObserver()
+	{
+		timeObserver.update();
+	}
+
+	@Override
+	public void registerObserver(TimeObserver observer)
+	{
+		timeObserver=observer;
 	}
 
 }
