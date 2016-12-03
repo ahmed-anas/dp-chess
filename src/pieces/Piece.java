@@ -1,6 +1,7 @@
 package pieces;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import chess.Cell;
 
@@ -14,51 +15,36 @@ import chess.Cell;
 public abstract class Piece implements Cloneable{
 
 	//Member Variables
-	private int color;
-	private String id=null;
-	private String path;
+	
 	protected ArrayList<Cell> possiblemoves = new ArrayList<Cell>();  //Protected (access from child classes)
 	public abstract ArrayList<Cell> move(Cell pos[][],Coordinates position);  //Abstract Function. Must be overridden
 	
-	//Id Setter
-	public void setId(String id)
-	{
-		this.id=id;
-	}
 	
-	//Path Setter
-	public void setPath(String path)
-	{
-		this.path=path;
-	}
-	
-	//Color Setter
-	public void setColor(int c)
-	{
-		this.color=c;
-	}
-	
-	//Path getter
-	public String getPath()
-	{
-		return path;
-	}
-	
-	//Id getter
-	public String getId()
-	{
-		return id;
-	}
-	
-	//Color Getter
-	public int getcolor()
-	{
-		return this.color;
-	}
+	public abstract void setId(String id);
+	public abstract void setPath(String path);
+	public abstract void setColor(int c);
+	public abstract String getPath();
+	public abstract String getId();
+	public abstract int getcolor();
 	
 	//Function to return the a "shallow" copy of the object. The copy has exact same variable value but different reference
 	public Piece getcopy() throws CloneNotSupportedException
 	{
 		return (Piece) this.clone();
+	}
+	
+	public boolean canMoveHere(Cell state[][], Coordinates here){
+		
+		ArrayList<Cell> moves = this.move(state, here);
+		Iterator<Cell> cellIte = moves.iterator();
+		
+		while(cellIte.hasNext()){
+			Cell movableCell = cellIte.next();
+			if(movableCell.getCoordinates().equals(here))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -9,15 +9,10 @@ import chess.Cell;
  *  
  *
  */
-public class Knight extends Piece{
-	
-	//Constructor
-	public Knight(String id,String path,int color)
-	{
-		setId(id);
-		setPath(path);
-		setColor(color);
-		
+public class Knight extends Ability
+{
+	public Knight(Piece piece){
+		super(piece);
 	}
 	
 	public boolean isValidMove(Cell[][] state, Coordinates position){
@@ -39,10 +34,14 @@ public class Knight extends Piece{
 		
 		
 		for(int i=0;i<8;i++)
+		{
 			if(isValidMove(state, new Coordinates(posx[i], posy[i])))
 			{
 				possiblemoves.add(state[posx[i]][posy[i]]);
 			}
+		}
+		
+		possiblemoves.addAll(this.piece.move(state, position));
 		return possiblemoves;
 	}
 }

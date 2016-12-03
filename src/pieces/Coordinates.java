@@ -12,6 +12,10 @@ public class Coordinates {
 		this.y = y;
 	}
 	
+	public boolean equals(Coordinates c){
+		return this.x == c.x && this.y == c.y;
+	}
+	
 	public Coordinates clone(){
 		return new Coordinates(this.getX(), this.getY());
 	}

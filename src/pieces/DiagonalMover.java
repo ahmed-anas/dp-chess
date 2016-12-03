@@ -4,30 +4,23 @@ import java.util.ArrayList;
 
 import chess.Cell;
 
-
-/**
- * This is the Bishop Class.
- * The Move Function defines the basic rules for movement of Bishop on a chess board
- * 
- *
- */
-public class Bishop extends Piece{
+public class DiagonalMover extends Ability{
 	
-	public Bishop(String id,String path,int color)
-	{
-		setId(id);
-		setPath(path);
-		setColor(color);
+	public DiagonalMover(Piece piece){
+		super(piece);
 	}
 	
-	public ArrayList<Cell> move(Cell state[][],Coordinates newPosition)
+	
+	public ArrayList<Cell> move(Cell state[][],Coordinates position)
 	{
 		//Bishop can Move diagonally in all 4 direction (NW,NE,SW,SE)
 		possiblemoves.clear();
-		checkSE(state, newPosition);
-		checkNW(state, newPosition);
-		checkSW(state, newPosition);
-		checkNE(state, newPosition);
+		checkSE(state, position);
+		checkNW(state, position);
+		checkSW(state, position);
+		checkNE(state, position);
+		
+		possiblemoves.addAll(this.piece.move(state, position));
 		return possiblemoves;
 	}
 
@@ -114,13 +107,5 @@ public class Bishop extends Piece{
 			nextPosition.decreaseY();
 			
 		}
-	}
-
-	private boolean ourPieceAtCell(Cell[][] state, Coordinates position) {
-		return state[position.getX()][position.getY()].getpiece().getcolor()==this.getcolor();
-	}
-
-	private boolean noPieceAtCell(Cell[][] state, Coordinates position) {
-		return state[position.getX()][position.getY()].getpiece()==null;
 	}
 }

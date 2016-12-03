@@ -4,12 +4,10 @@ import java.util.ArrayList;
 
 import chess.Cell;
 
-public class King extends Piece{
-	
+public class KingPiece extends PieceType{
 	private int x,y; //Extra variables for King class to keep a track of king's position
-	
-	//King Constructor
-	public King(String id,String path,int color,int x,int y)
+
+	public KingPiece(String id,String path,int color,int x,int y)
 	{
 		setx(x);
 		sety(y);
@@ -17,8 +15,6 @@ public class King extends Piece{
 		setPath(path);
 		setColor(color);
 	}
-	
-	//general value access functions
 	public void setx(int x)
 	{
 		this.x=x;
@@ -35,6 +31,7 @@ public class King extends Piece{
 	{
 		return y;
 	}
+	
 	//Move Function for King Overridden from Pieces
 	public ArrayList<Cell> move(Cell state[][],Coordinates position)
 	{
@@ -68,9 +65,6 @@ public class King extends Piece{
 	}
 	
 
-	private boolean isAttackedFromStraightLine(Cell[][] state, int x, int y) {
-		return ((state[x][y].getpiece() instanceof Rook) || (state[x][y].getpiece() instanceof Queen)) && state[x][y].getpiece().getcolor()!=this.getcolor();
-	}
 
 
 	private boolean isAttackedFromStraightLine(Cell[][] state) {
@@ -78,7 +72,7 @@ public class King extends Piece{
     	{
     		if(locationIsEmpty(state, i, y))
     			continue;
-    		else if (isAttackedFromStraightLine(state, i, y))
+    		else if (isAttacker(state, i, y))
     			return true;
     		else 
     			break;
@@ -88,7 +82,7 @@ public class King extends Piece{
     	{
     		if(locationIsEmpty(state, i, y))
     			continue;
-    		else if (isAttackedFromStraightLine(state, i, y))
+    		else if (isAttacker(state, i, y))
     			return true;
     		else 
     			break;
@@ -99,7 +93,7 @@ public class King extends Piece{
     	{
     		if(locationIsEmpty(state, x, i))
     			continue;
-    		else if (isAttackedFromStraightLine(state, x, i))
+    		else if (isAttacker(state, x, i))
     			return true;
     		else 
     			break;
@@ -110,7 +104,7 @@ public class King extends Piece{
     	{
     		if(locationIsEmpty(state, x, i))
     			continue;
-    		else if (isAttackedFromStraightLine(state, x, i))
+    		else if (isAttacker(state, x, i))
     			return true;
     		else 
     			break;
@@ -119,9 +113,17 @@ public class King extends Piece{
     	return false;
 	}
 	
-	public boolean isLongRangeDiagonalAttacker(Cell cell)
+	public boolean isAttacker(Cell state[][], int x, int y){
+		if(!isValidPosition(x, y)){
+			return false;
+		}
+		
+		Cell cell = state[x][y];
+		return cell.getpiece() != null && cell.getpiece().getcolor()!=this.getcolor() && cell.getpiece().canMoveHere(state, new Coordinates(this.getx(), this.gety()));
+	}
+	public boolean isAttacker(Cell state[][], Cell cell)
 	{
-		return cell.getpiece().getcolor()!=this.getcolor() && (cell.getpiece() instanceof Bishop || cell.getpiece() instanceof Queen); 
+		return this.isAttacker(state, cell.getCoordinates().getX(), cell.getCoordinates().getY());
 	}
 	
 	public boolean isAttackedFromDiagonal(Cell state[][]){
@@ -134,7 +136,7 @@ public class King extends Piece{
 				tempx++;
 				tempy--;
 			}
-			else if(isLongRangeDiagonalAttacker(state[tempx][tempy]))
+			else if(isAttacker(state, state[tempx][tempy]))
 				return true;
 			else
 			{
@@ -149,7 +151,7 @@ public class King extends Piece{
 				tempx--;
 				tempy++;
 			}
-			else if(isLongRangeDiagonalAttacker(state[tempx][tempy]))
+			else if(isAttacker(state, state[tempx][tempy]))
 				return true;
 			else
 			{
@@ -164,7 +166,7 @@ public class King extends Piece{
 				tempx--;
 				tempy--;
 			}
-			else if(isLongRangeDiagonalAttacker(state[tempx][tempy]))
+			else if(isAttacker(state, state[tempx][tempy]))
 				return true;
 			else
 			{
@@ -179,7 +181,7 @@ public class King extends Piece{
 				tempx++;
 				tempy++;
 			}
-			else if(isLongRangeDiagonalAttacker(state[tempx][tempy]))
+			else if(isAttacker(state, state[tempx][tempy]))
 				return true;
 			else
 			{
@@ -202,12 +204,9 @@ public class King extends Piece{
 		return false;
 	}
 	
-	public boolean isKingAttacker(Cell state[][], int x, int y)
-	{
-		return isValidPosition(x, y) && state[x][y].getpiece()!=null && state[x][y].getpiece().getcolor()!=this.getcolor() && (state[x][y].getpiece() instanceof King);
-	}
+
 	
-	public int[][] getSurroundingPoints(){
+	private int[][] getSurroundingPoints(){
 		int pox[]={x+1,x+1,x+1,x,x,x-1,x-1,x-1};
 		int poy[]={y-1,y+1,y,y+1,y-1,y+1,y-1,y};
 		int[][] allPoints = new int[8][2];
@@ -219,12 +218,12 @@ public class King extends Piece{
 		return allPoints;
 		
 	}
-	public boolean isAttackedByKing(Cell state[][])
+	protected boolean isAttackedByKing(Cell state[][])
 	{
 		int surroundingPoints[][] = getSurroundingPoints();
 		
 		for(int i = 0; i < surroundingPoints.length;i++){
-			if(isKingAttacker(state, surroundingPoints[i][0], surroundingPoints[i][1]))
+			if(isAttacker(state, surroundingPoints[i][0], surroundingPoints[i][1]))
 				return true;
 		}
 		

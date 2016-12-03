@@ -4,19 +4,12 @@ import java.util.ArrayList;
 
 import chess.Cell;
 
-/**
- * This is the Rook class inherited from abstract Piece class
- *
- */
-public class Rook extends Piece{
+public class StraightMover extends Ability{
 	
-	public Rook(String id,String path,int color)
-	{
-		setId(id);
-		setPath(path);
-		setColor(color);
+	public StraightMover(Piece piece){
+		super(piece);
 	}
-	
+	@Override
 	public ArrayList<Cell> move(Cell state[][], Coordinates position)
 	{
 		possiblemoves.clear();
@@ -24,7 +17,10 @@ public class Rook extends Piece{
 		checkE(state, position);
 		checkS(state, position);
 		checkN(state, position);
+		
+		possiblemoves.addAll(piece.move(state, position));
 		return possiblemoves;
+		
 	}
 
 	private void checkN(Cell[][] state, Coordinates position) {
@@ -102,11 +98,5 @@ public class Rook extends Piece{
 		}
 	}
 
-	private boolean ourPieceAtCell(Cell[][] state, Coordinates position) {
-		return state[position.getX()][position.getY()].getpiece().getcolor()==this.getcolor();
-	}
-
-	private boolean noPieceAtCell(Cell[][] state, Coordinates position) {
-		return state[position.getX()][position.getY()].getpiece()==null;
-	}
+	
 }

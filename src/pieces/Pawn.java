@@ -8,13 +8,11 @@ import chess.Cell;
  * This is the Pawn Class inherited from the piece
  *
  */
-public class Pawn extends Piece{
+public class Pawn extends Ability{
 	
-	public Pawn(String id,String path,int color)
+	public Pawn(Piece piece)
 	{
-		setId(id);
-		setPath(path);
-		setColor(color);
+		super(piece);
 	}
 	
 	//Move Function Overridden
@@ -36,6 +34,7 @@ public class Pawn extends Piece{
 			handleFirstBlackMove(state, position);
 			addKillMovesBlack(state, position);
 		}
+		possiblemoves.addAll(this.piece.move(state, position));
 		return possiblemoves;
 	}
 
@@ -101,9 +100,7 @@ public class Pawn extends Piece{
 			possiblemoves.add(state[killPositionSeconds.getX()][killPositionSeconds.getY()]);
 	}
 
-	private boolean noPieceAtCell(Cell[][] state, Coordinates position) {
-		return state[position.getX()][position.getY()].getpiece()==null;
-	}
+
 
 	private boolean white() {
 		return getcolor()==0;
