@@ -10,6 +10,7 @@ public abstract class PieceType extends Piece{
 	private String path;
 	
 	
+	
 
 	@Override
 	public ArrayList<Cell> move(Cell state[][], Coordinates position)
@@ -52,5 +53,12 @@ public abstract class PieceType extends Piece{
 	{
 		return this.color;
 	}
+	
+
+	@Override
+	public PieceType getRootPiece() {
+		return this;
+	}
+
 	
 }

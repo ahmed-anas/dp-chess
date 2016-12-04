@@ -15,6 +15,13 @@ public abstract class Ability extends Piece{
 		return state[position.getX()][position.getY()].getpiece().getcolor()==this.getcolor();
 	}
 	
+	@Override
+	public PieceType getRootPiece(){
+		return this.piece.getRootPiece();
+	}
+	public int getPieceType(){
+		return this.piece.getPieceType();
+	}
 	//Id Setter
 	public void setId(String id)
 	{
@@ -49,6 +56,24 @@ public abstract class Ability extends Piece{
 	public int getcolor()
 	{
 		return this.piece.getcolor();
+	}
+	
+	
+	public void setx(int x)
+	{
+		this.piece.setx(x);
+	}
+	public void sety(int y)
+	{
+		this.piece.sety(y);
+	}
+	public int getx()
+	{
+		return this.piece.getx();
+	}
+	public int gety()
+	{
+		return this.piece.gety();
 	}
 
 }

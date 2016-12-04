@@ -36,16 +36,24 @@ import java.util.ListIterator;
 public class Main implements TimeObserver
 {
 	private static final long serialVersionUID = 1L;
-	private static final int WHITE_COLOUR=0;
-	private static final int BLACK_COLOUR=1;
+	public static final int WHITE_COLOUR=0;
+	public static final int BLACK_COLOUR=1;
 	private static final int HEIGHT = 700;
 	private static final int WIDTH = 1110;
-	private static Rook wr01, wr02, br01, br02;
-	private static Knight wk01, wk02, bk01, bk02;
-	private static Bishop wb01, wb02, bb01, bb02;
-	private static Pawn wp[], bp[];
-	private static Queen wq, bq;
-	private static King wk, bk;
+//	private static Rook wr01, wr02, br01, br02;
+//	private static Knight wk01, wk02, bk01, bk02;
+//	private static Bishop wb01, wb02, bb01, bb02;
+//	private static Pawn wp[], bp[];
+//	private static Queen wq, bq;
+//	private static King wk, bk;
+	private static Piece
+		wr01, wr02, br01, br02, 
+		wk01, wk02, bk01, bk02, 
+		wb01, wb02, bb01, bb02, 
+		wp[], bp[], 
+		wq, bq, 
+		wk, bk;
+	
 	private Cell selectedCell, previous;
 	private int chance = 0;
 	private Board data = new Board();
@@ -120,28 +128,54 @@ public class Main implements TimeObserver
 
 	private static void intializePieces()
 	{
-		wr01 = new Rook("WR01", ImagePath.WHITE_ROOK, WHITE_COLOUR);
-		wr02 = new Rook("WR02", ImagePath.WHITE_ROOK, WHITE_COLOUR);
-		br01 = new Rook("BR01",ImagePath.BLACK_ROOK, BLACK_COLOUR);
-		br02 = new Rook("BR02", ImagePath.BLACK_ROOK, BLACK_COLOUR);
-		wk01 = new Knight("WK01", ImagePath.WHITE_KNIGHT, WHITE_COLOUR);
-		wk02 = new Knight("WK02", ImagePath.WHITE_KNIGHT, WHITE_COLOUR);
-		bk01 = new Knight("BK01", ImagePath.BLACK_KNIGHT, BLACK_COLOUR);
-		bk02 = new Knight("BK02", ImagePath.BLACK_KNIGHT, BLACK_COLOUR);
-		wb01 = new Bishop("WB01", ImagePath.WHITE_BISHOP, WHITE_COLOUR);
-		wb02 = new Bishop("WB02", ImagePath.WHITE_BISHOP, WHITE_COLOUR);
-		bb01 = new Bishop("BB01", ImagePath.BLACK_BISHOP, BLACK_COLOUR);
-		bb02 = new Bishop("BB02", ImagePath.BLACK_BISHOP, BLACK_COLOUR);
-		wq = new Queen("WQ", ImagePath.WHITE_QUEEN, WHITE_COLOUR);
-		bq = new Queen("BQ", ImagePath.BLACK_QUEEN, BLACK_COLOUR);
-		wk = new King("WK", ImagePath.WHITE_KING, WHITE_COLOUR, 7, 3);
-		bk = new King("BK", ImagePath.BLACK_KING, BLACK_COLOUR, 0, 3);
+//		wr01 = new Rook("WR01", ImagePath.WHITE_ROOK, WHITE_COLOUR);
+//		wr02 = new Rook("WR02", ImagePath.WHITE_ROOK, WHITE_COLOUR);
+//		br01 = new Rook("BR01",ImagePath.BLACK_ROOK, BLACK_COLOUR);
+//		br02 = new Rook("BR02", ImagePath.BLACK_ROOK, BLACK_COLOUR);
+//		wk01 = new Knight("WK01", ImagePath.WHITE_KNIGHT, WHITE_COLOUR);
+//		wk02 = new Knight("WK02", ImagePath.WHITE_KNIGHT, WHITE_COLOUR);
+//		bk01 = new Knight("BK01", ImagePath.BLACK_KNIGHT, BLACK_COLOUR);
+//		bk02 = new Knight("BK02", ImagePath.BLACK_KNIGHT, BLACK_COLOUR);
+//		wb01 = new Bishop("WB01", ImagePath.WHITE_BISHOP, WHITE_COLOUR);
+//		wb02 = new Bishop("WB02", ImagePath.WHITE_BISHOP, WHITE_COLOUR);
+//		bb01 = new Bishop("BB01", ImagePath.BLACK_BISHOP, BLACK_COLOUR);
+//		bb02 = new Bishop("BB02", ImagePath.BLACK_BISHOP, BLACK_COLOUR);
+//		wq = new Queen("WQ", ImagePath.WHITE_QUEEN, WHITE_COLOUR);
+//		bq = new Queen("BQ", ImagePath.BLACK_QUEEN, BLACK_COLOUR);
+//		wk = new King("WK", ImagePath.WHITE_KING, WHITE_COLOUR, 7, 3);
+//		bk = new King("BK", ImagePath.BLACK_KING, BLACK_COLOUR, 0, 3);
+//		wp = new Pawn[8];
+//		bp = new Pawn[8];
+//		for (int i = 0; i < 8; i++)
+//		{
+//			wp[i] = new Pawn("WP0" + (i + 1), ImagePath.WHITE_PAWN, WHITE_COLOUR);
+//			bp[i] = new Pawn("BP0" + (i + 1), ImagePath.BLACK_PAWN, BLACK_COLOUR);
+//		}
+		
+		PieceFactory simplePieceFactory = new SimplePieceFactory();
+		
+		wr01 =  simplePieceFactory.create("WR01", ImagePath.WHITE_ROOK, WHITE_COLOUR, PieceFactory.TYPE_ROOK);
+		wr02 = simplePieceFactory.create("WR02", ImagePath.WHITE_ROOK, WHITE_COLOUR, PieceFactory.TYPE_ROOK);
+		br01 = simplePieceFactory.create("BR01",ImagePath.BLACK_ROOK, BLACK_COLOUR, PieceFactory.TYPE_ROOK);
+		br02 = simplePieceFactory.create("BR02", ImagePath.BLACK_ROOK, BLACK_COLOUR, PieceFactory.TYPE_ROOK);
+		wk01 = simplePieceFactory.create("WK01", ImagePath.WHITE_KNIGHT, WHITE_COLOUR, PieceFactory.TYPE_KNIGHT);
+		wk02 = simplePieceFactory.create("WK02", ImagePath.WHITE_KNIGHT, WHITE_COLOUR, PieceFactory.TYPE_KNIGHT);
+		bk01 = simplePieceFactory.create("BK01", ImagePath.BLACK_KNIGHT, BLACK_COLOUR, PieceFactory.TYPE_KNIGHT);
+		bk02 = simplePieceFactory.create("BK02", ImagePath.BLACK_KNIGHT, BLACK_COLOUR, PieceFactory.TYPE_KNIGHT);
+		wb01 = simplePieceFactory.create("WB01", ImagePath.WHITE_BISHOP, WHITE_COLOUR, PieceFactory.TYPE_BISHOP);
+		wb02 = simplePieceFactory.create("WB02", ImagePath.WHITE_BISHOP, WHITE_COLOUR, PieceFactory.TYPE_BISHOP);
+		bb01 = simplePieceFactory.create("BB01", ImagePath.BLACK_BISHOP, BLACK_COLOUR, PieceFactory.TYPE_BISHOP);
+		bb02 = simplePieceFactory.create("BB02", ImagePath.BLACK_BISHOP, BLACK_COLOUR, PieceFactory.TYPE_BISHOP);
+		wq = simplePieceFactory.create("WQ", ImagePath.WHITE_QUEEN, WHITE_COLOUR, PieceFactory.TYPE_QUEEN);
+		bq = simplePieceFactory.create("BQ", ImagePath.BLACK_QUEEN, BLACK_COLOUR, PieceFactory.TYPE_QUEEN);
+		wk = simplePieceFactory.create("WK", ImagePath.WHITE_KING, WHITE_COLOUR, PieceFactory.TYPE_KING);
+		bk = simplePieceFactory.create("BK", ImagePath.BLACK_KING, BLACK_COLOUR, PieceFactory.TYPE_KING);
 		wp = new Pawn[8];
 		bp = new Pawn[8];
 		for (int i = 0; i < 8; i++)
 		{
-			wp[i] = new Pawn("WP0" + (i + 1), ImagePath.WHITE_PAWN, WHITE_COLOUR);
-			bp[i] = new Pawn("BP0" + (i + 1), ImagePath.BLACK_PAWN, BLACK_COLOUR);
+			wp[i] = simplePieceFactory.create("WP0" + (i + 1), ImagePath.WHITE_PAWN, WHITE_COLOUR, PieceFactory.TYPE_PAWN);
+			bp[i] = simplePieceFactory.create("BP0" + (i + 1), ImagePath.BLACK_PAWN, BLACK_COLOUR, PieceFactory.TYPE_PAWN);
 		}
 	}
 
@@ -446,7 +480,7 @@ public class Main implements TimeObserver
 			}
 		return newboardstate;
 	}
-	private King getKing(int color)
+	private Piece getKing(int color)
 	{
 		if (color == WHITE_COLOUR)
 			return wk;
@@ -478,13 +512,13 @@ public class Main implements TimeObserver
 			newboardstate[tocell.getCellX()][tocell.getCellY()].removePiece();
 
 		newboardstate[tocell.getCellX()][tocell.getCellY()].setPiece(newboardstate[fromcell.getCellX()][fromcell.getCellY()].getpiece());
-		if (newboardstate[tocell.getCellX()][tocell.getCellY()].getpiece() instanceof King)
+		if (newboardstate[tocell.getCellX()][tocell.getCellY()].getpiece().getPieceType() == Piece.KING_TYPE)
 		{
-			((King) (newboardstate[tocell.getCellX()][tocell.getCellY()].getpiece())).setx(tocell.getCellX());
-			((King) (newboardstate[tocell.getCellX()][tocell.getCellY()].getpiece())).sety(tocell.getCellY());
+			newboardstate[tocell.getCellX()][tocell.getCellY()].getpiece().setx(tocell.getCellX());
+			newboardstate[tocell.getCellX()][tocell.getCellY()].getpiece().sety(tocell.getCellY());
 		}
 		newboardstate[fromcell.getCellX()][fromcell.getCellY()].removePiece();
-		return (((King) (newboardstate[getKing(chance).getx()][getKing(chance).gety()].getpiece())).isindanger(newboardstate));
+		return (( (newboardstate[getKing(chance).getx()][getKing(chance).gety()].getpiece())).isindanger(newboardstate));
 	}
 
 	// A function to eliminate the possible moves that will put the King in
@@ -505,15 +539,15 @@ public class Main implements TimeObserver
 			newboardstate[tempc.getCellX()][tempc.getCellY()].setPiece(newboardstate[fromcell.getCellX()][fromcell.getCellY()].getpiece());
 			x = getKing(chance).getx();
 			y = getKing(chance).gety();
-			if (newboardstate[fromcell.getCellX()][fromcell.getCellY()].getpiece() instanceof King)
+			if (newboardstate[fromcell.getCellX()][fromcell.getCellY()].getpiece().getRootPiece() instanceof KingPiece)
 			{
-				((King) (newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece())).setx(tempc.getCellX());
-				((King) (newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece())).sety(tempc.getCellY());
+				newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece().setx(tempc.getCellX());
+				newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece().sety(tempc.getCellY());
 				x = tempc.getCellX();
 				y = tempc.getCellY();
 			}
 			newboardstate[fromcell.getCellX()][fromcell.getCellY()].removePiece();
-			if ((((King) (newboardstate[x][y].getpiece())).isindanger(newboardstate) == false))
+			if (((newboardstate[x][y].getpiece())).isindanger(newboardstate) == false)
 				newlist.add(tempc);
 		}
 		return newlist;
@@ -536,15 +570,15 @@ public class Main implements TimeObserver
 			newboardstate[tempc.getCellX()][tempc.getCellY()].setPiece(newboardstate[fromcell.getCellX()][fromcell.getCellY()].getpiece());
 			x = getKing(color).getx();
 			y = getKing(color).gety();
-			if (newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece() instanceof King)
+			if (newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece().getRootPiece() instanceof KingPiece)
 			{
-				((King) (newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece())).setx(tempc.getCellX());
-				((King) (newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece())).sety(tempc.getCellY());
+				( (newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece())).setx(tempc.getCellX());
+				( (newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece())).sety(tempc.getCellY());
 				x = tempc.getCellX();
 				y = tempc.getCellY();
 			}
 			newboardstate[fromcell.getCellX()][fromcell.getCellY()].removePiece();
-			if ((((King) (newboardstate[x][y].getpiece())).isindanger(newboardstate) == false))
+			if ((((newboardstate[x][y].getpiece())).isindanger(newboardstate) == false))
 				newlist.add(tempc);
 		}
 		return newlist;
@@ -644,7 +678,7 @@ public class Main implements TimeObserver
 		selectedCell.select();
 		destinationList.clear();
 		destinationList = selectedCell.getpiece().move(data.getBoardState(), selectedCell.getCoordinates());
-		if (selectedCell.getpiece() instanceof King)
+		if (selectedCell.getpiece().getRootPiece() instanceof KingPiece)
 			destinationList = filterdestination(selectedCell);
 		else
 		{
@@ -655,7 +689,7 @@ public class Main implements TimeObserver
 		}
 	}
 
-	private King getOpponentKing()
+	private Piece getOpponentKing()
 	{
 		return getKing(chance ^ 1);
 	}
@@ -707,10 +741,10 @@ public class Main implements TimeObserver
 					}
 					if (getKing(chance).isindanger(data.getBoardState()) == false)
 						data.getBoardState()[getKing(chance).getx()][getKing(chance).gety()].removecheck();
-					if (selectedCell.getpiece() instanceof King)
+					if (selectedCell.getpiece().getRootPiece() instanceof KingPiece)
 					{
-						((King) selectedCell.getpiece()).setx(selectedCell.getCellX());
-						((King) selectedCell.getpiece()).sety(selectedCell.getCellY());
+						( selectedCell.getpiece()).setx(selectedCell.getCellX());
+						( selectedCell.getpiece()).sety(selectedCell.getCellY());
 					}
 					stateLogger.addNewMove(previous, selectedCell);
 					changeMove();
@@ -738,10 +772,10 @@ public class Main implements TimeObserver
 				highlightdestinations();
 			}
 		}
-		if (selectedCell.getpiece() != null && selectedCell.getpiece() instanceof King)
+		if (selectedCell.getpiece() != null && selectedCell.getpiece().getRootPiece() instanceof KingPiece)
 		{
-			((King) selectedCell.getpiece()).setx(selectedCell.getCellX());
-			((King) selectedCell.getpiece()).sety(selectedCell.getCellY());
+			( selectedCell.getpiece()).setx(selectedCell.getCellX());
+			( selectedCell.getpiece()).sety(selectedCell.getCellY());
 		}
 	}
 	private class MouseHandler extends MouseAdapter

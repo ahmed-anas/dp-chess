@@ -1,11 +1,12 @@
 package pieces;
 
 import java.util.ArrayList;
-
+import chess.Main;
 import chess.Cell;
 
 public class KingPiece extends PieceType{
 	private int x,y; //Extra variables for King class to keep a track of king's position
+	
 
 	public KingPiece(String id,String path,int color,int x,int y)
 	{
@@ -37,8 +38,6 @@ public class KingPiece extends PieceType{
 	{
 		//King can move only one step. So all the adjacent 8 cells have been considered.
 		possiblemoves.clear();
-		int posx[]={x,x,x+1,x+1,x+1,x-1,x-1,x-1};
-		int posy[]={y-1,y+1,y-1,y,y+1,y-1,y,y+1};
 		
 		Coordinates[] positions = {
 			new Coordinates(position.getX()    , position.getY() - 1),
@@ -119,7 +118,13 @@ public class KingPiece extends PieceType{
 		}
 		
 		Cell cell = state[x][y];
-		return cell.getpiece() != null && cell.getpiece().getcolor()!=this.getcolor() && cell.getpiece().canMoveHere(state, new Coordinates(this.getx(), this.gety()));
+		
+		Piece p = state[x][y].getpiece();
+		
+		state[x][y].setPiece(null);
+		boolean returner = cell.getpiece() != null && cell.getpiece().getcolor()!=this.getcolor() && cell.getpiece().canMoveHere(state, new Coordinates(this.getx(), this.gety()));
+		state[x][y].setPiece(p);
+		return returner;
 	}
 	public boolean isAttacker(Cell state[][], Cell cell)
 	{
@@ -268,4 +273,8 @@ public class KingPiece extends PieceType{
 		
 		return false;
     }
+	@Override
+	public int getPieceType() {
+		return Piece.KING_TYPE;
+	}
 }

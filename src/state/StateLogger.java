@@ -17,7 +17,7 @@ import java.util.List;
 
 import javax.swing.Timer;
 
-import sun.misc.JavaAWTAccess;
+//import sun.misc.JavaAWTAccess;
 
 import chess.Cell;
 import chess.Main;
