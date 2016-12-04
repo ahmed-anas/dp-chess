@@ -75,5 +75,11 @@ public abstract class Ability extends Piece{
 	{
 		return this.piece.gety();
 	}
+	
+	public  boolean  hasInstance(Class c)
+	{
+		return c.isAssignableFrom(this.getClass()) || this.piece.hasInstance(c);
+	}
+
 
 }

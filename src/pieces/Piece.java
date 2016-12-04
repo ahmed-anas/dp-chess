@@ -20,7 +20,7 @@ public abstract class Piece implements Cloneable{
 	public abstract ArrayList<Cell> move(Cell pos[][],Coordinates position);  //Abstract Function. Must be overridden
 	
 	public static final int KING_TYPE = 1;
-	public static final int SIMPLE_TYPE = 1;
+	public static final int SIMPLE_TYPE = 2;
 	
 	public abstract int getPieceType();
 	
@@ -74,4 +74,6 @@ public abstract class Piece implements Cloneable{
 		}
 		return false;
 	}
+	
+	public abstract boolean  hasInstance(Class c);
 }

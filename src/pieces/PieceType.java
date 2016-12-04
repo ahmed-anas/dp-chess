@@ -59,6 +59,11 @@ public abstract class PieceType extends Piece{
 	public PieceType getRootPiece() {
 		return this;
 	}
+	
+	public  boolean  hasInstance(Class c)
+	{
+		return c.isAssignableFrom(this.getClass());
+	}
 
 	
 }
