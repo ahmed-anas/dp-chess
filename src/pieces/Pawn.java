@@ -15,27 +15,18 @@ public class Pawn extends Piece{
 		setId(id);
 		setPath(path);
 		setColor(color);
+		pawnState= (color==0) ? whitePawn:blackPawn;
 	}
-	
+
+	private BlackPawn blackPawn=new BlackPawn();
+	private WhitePawn whitePawn=new WhitePawn();
+	private PawnColour pawnState=null;
 	//Move Function Overridden
 	public ArrayList<Cell> move(Cell state[][], Coordinates position)
 	{
 		
 		possiblemoves.clear();
-		if(white())
-		{
-			if(position.getX()==0)
-				return possiblemoves;
-			handleFirstWhiteMove(state, position);
-			addKillMovesWhite(state, position);
-		}
-		else
-		{
-			if(position.getX()==8)
-				return possiblemoves;
-			handleFirstBlackMove(state, position);
-			addKillMovesBlack(state, position);
-		}
+		pawnState.movePawn(state, position);
 		return possiblemoves;
 	}
 
@@ -108,4 +99,37 @@ public class Pawn extends Piece{
 	private boolean white() {
 		return getcolor()==0;
 	}
+	private abstract class PawnColour
+	{
+		protected abstract void movePawn(Cell state[][], Coordinates position);
+	}
+	private class WhitePawn extends PawnColour
+	{
+
+		@Override
+		protected void movePawn(Cell[][] state, Coordinates position)
+		{
+			if(position.getX()!=0)
+			{
+				handleFirstWhiteMove(state, position);
+				addKillMovesWhite(state, position);
+			}
+		}
+		
+	}
+	private class BlackPawn extends PawnColour
+	{
+
+		@Override
+		protected void movePawn(Cell[][] state, Coordinates position)
+		{
+			if(position.getX()!=8)
+			{
+				handleFirstBlackMove(state, position);
+				addKillMovesBlack(state, position);		
+			}
+		}
+		
+	}
+	
 }
