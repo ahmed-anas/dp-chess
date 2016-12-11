@@ -3,13 +3,6 @@ package pieces;
 import java.util.ArrayList;
 import chess.Cell;
 
-
-/**
- * This is the Piece Class. It is an abstract class from which all the actual pieces are inherited.
- * It defines all the function common to all the pieces
- * The move() function an abstract function that has to be overridden in all the inherited class
- * It implements Cloneable interface as a copy of the piece is required very often
- */
 public abstract class Piece implements Cloneable{
 
 	//Member Variables

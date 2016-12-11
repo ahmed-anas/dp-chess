@@ -20,9 +20,6 @@ class Knight extends Ability
 	}
 	
 	
-	//Move Function overridden
-	//There are at max 8 possible moves for a knight at any point of time.
-	//Knight moves only 2(1/2) steps
 	public ArrayList<Cell> move(Cell state[][], Coordinates position)
 	{
 		int x = position.getX();

@@ -15,15 +15,12 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 
-abstract class GameUIAction {
+abstract class GameUIAction implements ActionListener{
 
 	protected StateLogger gameStateLogger;
 	protected String actionType;
 
-	public GameUIAction() {
-		super();
-	}
-
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		JFrame mainFrame = new JFrame();

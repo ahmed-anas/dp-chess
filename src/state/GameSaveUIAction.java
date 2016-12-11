@@ -12,6 +12,13 @@ public class GameSaveUIAction extends GameUIAction implements ActionListener{
 		 actionType = "Save";
 	 }
 	
+
+
+	@Override
+	protected ActionListener getActionListener(int index) {
+		// TODO Auto-generated method stub
+		return new GameSaveDo(index);
+	}
 	
 	private class GameSaveDo extends GameUIAction.GameDoer{
 		
@@ -26,11 +33,5 @@ public class GameSaveUIAction extends GameUIAction implements ActionListener{
 		
 	}
 
-
-	@Override
-	protected ActionListener getActionListener(int index) {
-		// TODO Auto-generated method stub
-		return new GameSaveDo(index);
-	}
 
 }

@@ -9,8 +9,13 @@ public class GameLoadUIAction extends GameUIAction implements ActionListener{
 	public GameLoadUIAction(StateLogger gameStateLogger){
 		this.gameStateLogger = gameStateLogger;
 		actionType = "Load";
-	 }
+	}
 	
+	@Override
+	protected ActionListener getActionListener(int index) {
+		// TODO Auto-generated method stub
+		return new GameLoadDo(index);
+	}
 
 	
 	private class GameLoadDo extends GameUIAction.GameDoer{
@@ -31,9 +36,5 @@ public class GameLoadUIAction extends GameUIAction implements ActionListener{
 		
 	}
 
-	@Override
-	protected ActionListener getActionListener(int index) {
-		// TODO Auto-generated method stub
-		return new GameLoadDo(index);
-	}
+
 }
