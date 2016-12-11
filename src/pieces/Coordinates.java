@@ -1,6 +1,6 @@
 package pieces;
 
-public class Coordinates {
+public class Coordinates implements Cloneable{
 
 	private int x;
 	private int y;
@@ -12,10 +12,11 @@ public class Coordinates {
 		this.y = y;
 	}
 	
-	public boolean equals(Coordinates c){
+	public boolean isEqualTo(Coordinates c){
 		return this.x == c.x && this.y == c.y;
 	}
 	
+	@Override
 	public Coordinates clone(){
 		return new Coordinates(this.getX(), this.getY());
 	}
@@ -36,16 +37,16 @@ public class Coordinates {
 		this.y = y;
 	}
 	
-	public void increaseX(){
+	void increaseX(){
 		this.x++;
 	}
-	public void decreaseX(){
+	void decreaseX(){
 		this.x--;
 	}
-	public void increaseY(){
+	void increaseY(){
 		this.y++;
 	}
-	public void decreaseY(){
+	void decreaseY(){
 		this.y--;
 	}
 	

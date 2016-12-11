@@ -1,6 +1,6 @@
 package chess;
 
-public interface TimeObserver
+interface TimeObserver
 {
 	public void update();
 }

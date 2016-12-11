@@ -1,6 +1,6 @@
 package chess;
 
-public interface TimeSubject
+interface TimeSubject
 {
 	public void notifyObserver();
 	public void registerObserver(TimeObserver observer);

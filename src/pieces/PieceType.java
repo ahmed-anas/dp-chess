@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import chess.Cell;
 
-public abstract class PieceType extends Piece{
+abstract class PieceType extends Piece{
 	private int color;
 	private String id=null;
 	private String path;

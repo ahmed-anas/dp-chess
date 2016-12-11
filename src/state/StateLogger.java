@@ -2,14 +2,11 @@ package state;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,11 +24,9 @@ public class StateLogger implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	private static StateLogger instance = null;
-	
-	ArrayList<MoveSequence> moveHistory;
-	Player whitePlayer;
-	Player blackPlayer;
+	private ArrayList<MoveSequence> moveHistory;
+	private Player whitePlayer;
+	private Player blackPlayer;
 	
 	public Player getWhitePlayer() {
 		return whitePlayer;
@@ -57,11 +52,6 @@ public class StateLogger implements Serializable{
 		return Collections.unmodifiableList(this.moveHistory);
 	}
 	
-	public static StateLogger getInstance(){
-		if(StateLogger.instance == null)
-			StateLogger.instance = new StateLogger();
-		return StateLogger.instance;
-	}
 	
 	public void addNewMove(Cell previous, Cell next){
 		moveHistory.add(new MoveSequence(previous, next));;
@@ -72,7 +62,7 @@ public class StateLogger implements Serializable{
 		moveHistory.add(new MoveSequence());
 	}
 	
-	public void save(int slot) throws IOException{
+	void save(int slot) throws IOException{
 		FileOutputStream outputFile = new FileOutputStream("savegame_" + slot + ".ser");
 		ObjectOutputStream outputObject = new ObjectOutputStream(outputFile);
 		outputObject.writeObject(this);
@@ -80,7 +70,7 @@ public class StateLogger implements Serializable{
 		outputFile.close();
 	}
 	
-	public void load(int slot) throws IOException, ClassNotFoundException, InterruptedException{
+	void load(int slot) throws IOException, ClassNotFoundException, InterruptedException{
 		FileInputStream fileIn = new FileInputStream("savegame_" + slot + ".ser");
         ObjectInputStream in = new ObjectInputStream(fileIn);
         StateLogger savedState = (StateLogger) in.readObject();

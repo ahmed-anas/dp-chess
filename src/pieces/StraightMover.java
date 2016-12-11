@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import chess.Cell;
 
-public class StraightMover extends Ability{
+class StraightMover extends Ability{
 	
-	public StraightMover(Piece piece){
+	StraightMover(Piece piece){
 		super(piece);
 	}
 	@Override

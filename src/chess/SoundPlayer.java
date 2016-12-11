@@ -6,8 +6,9 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
-public class SoundPlayer implements Runnable {
+class SoundPlayer implements Runnable {
 
+	
 	public SoundPlayer(String soundName)
 	{
 		this.soundName=soundName;
@@ -26,11 +27,7 @@ public class SoundPlayer implements Runnable {
 		      }
 		}
 	
-	public static void playBeep2(){
-		Thread soundThread=new Thread(new SoundPlayer("B:/OneDrive/lums/design patterns/project/eclipse_workspace/Chess/beep.wav"));
-		soundThread.start();
-	}
-	public static synchronized void playBeep() {
+	static synchronized void playBeep() {
 		final String url = "B:/OneDrive/lums/design patterns/project/eclipse_workspace/Chess/beep.wav";
 		
 		final File f = new File(url);

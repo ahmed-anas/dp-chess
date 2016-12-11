@@ -1,14 +1,13 @@
 package pieces;
 
 import java.util.ArrayList;
-import chess.Main;
 import chess.Cell;
 
 public class KingPiece extends PieceType{
 	private int x,y; //Extra variables for King class to keep a track of king's position
 	
 
-	public KingPiece(String id,String path,int color,int x,int y)
+	KingPiece(String id,String path,int color,int x,int y)
 	{
 		setx(x);
 		sety(y);
@@ -37,8 +36,6 @@ public class KingPiece extends PieceType{
 		{
 			//King can move only one step. So all the adjacent 8 cells have been considered.
 			possiblemoves.clear();
-			int posx[]={x,x,x+1,x+1,x+1,x-1,x-1,x-1};
-			int posy[]={y-1,y+1,y-1,y,y+1,y-1,y,y+1};
 			
 			Coordinates[] positions = {
 				new Coordinates(position.getX()    , position.getY() - 1),
@@ -116,12 +113,12 @@ public class KingPiece extends PieceType{
 	    	return false;
 		}
 		
-		public boolean isLongRangeDiagonalAttacker(Cell cell)
+		private boolean isLongRangeDiagonalAttacker(Cell cell)
 		{
 			return cell.getpiece().getcolor()!=this.getcolor() && (cell.getpiece().hasInstance(DiagonalMover.class)); 
 		}
 		
-		public boolean isAttackedFromDiagonal(Cell state[][]){
+		private boolean isAttackedFromDiagonal(Cell state[][]){
 			//checking for attack from diagonal direction
 	    	int tempx=x+1,tempy=y-1;
 			while(tempx<8&&tempy>=0)
@@ -186,7 +183,7 @@ public class KingPiece extends PieceType{
 			return false;
 		}
 		
-		public boolean isAttackedByKnight(Cell[][] state){
+		private boolean isAttackedByKnight(Cell[][] state){
 			//Checking for attack from the Knight of opposite color
 			int posx[]={x+1,x+1,x+2,x+2,x-1,x-1,x-2,x-2};
 			int posy[]={y-2,y+2,y-1,y+1,y-2,y+2,y-1,y+1};
@@ -199,7 +196,7 @@ public class KingPiece extends PieceType{
 			return false;
 		}
 		
-		public boolean isKingAttacker(Cell state[][], int x, int y)
+		private boolean isKingAttacker(Cell state[][], int x, int y)
 		{
 			return isValidPosition(x, y) && state[x][y].getpiece()!=null && state[x][y].getpiece().getcolor()!=this.getcolor() && (state[x][y].getpiece().getRootPiece() instanceof KingPiece);
 		}
@@ -216,7 +213,7 @@ public class KingPiece extends PieceType{
 			return allPoints;
 			
 		}
-		public boolean isAttackedByKing(Cell state[][])
+		private boolean isAttackedByKing(Cell state[][])
 		{
 			int surroundingPoints[][] = getSurroundingPoints();
 			
@@ -232,13 +229,13 @@ public class KingPiece extends PieceType{
 		{
 			return x>=0&&x<8&&y>=0&&y<8;
 		}
-		public boolean isPawnAttacker(Cell cell){
+		private boolean isPawnAttacker(Cell cell){
 			return cell.getpiece()!=null&&cell.getpiece().getcolor()!=this.getcolor()&&(cell.getpiece() instanceof Pawn);
 		}
-		public boolean isPawnAttacker(Cell state[][], int x, int y){
+		private boolean isPawnAttacker(Cell state[][], int x, int y){
 			return isValidPosition(x, y) && isPawnAttacker(state[x][y]);
 		}
-		public boolean isAttackedByPawn(Cell state[][])
+		private boolean isAttackedByPawn(Cell state[][])
 		{
 			int attackerRow = getcolor()==0?x-1:x+1;
 			

@@ -2,7 +2,7 @@ package state;
 
 import chess.Cell;
 
-public class MoveSequence implements java.io.Serializable {
+class MoveSequence implements java.io.Serializable {
 	/**
 	 * 
 	 */
@@ -35,7 +35,7 @@ public class MoveSequence implements java.io.Serializable {
 	public boolean isTurnWithoutMove(){
 		return (this.previousX == this.previousY) && (this.nextX == this.nextY) && this.nextX == 0 && this.previousX == 0; 
 	}
-	public MoveSequence(
+	MoveSequence(
 			Cell previous,
 			Cell next
 	)

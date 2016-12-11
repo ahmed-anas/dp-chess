@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 
-public abstract class GameUIAction {
+abstract class GameUIAction {
 
 	protected StateLogger gameStateLogger;
 	protected String actionType;
@@ -55,7 +55,7 @@ public abstract class GameUIAction {
 	abstract class GameDoer implements ActionListener{
 		protected int slot;
 		private String actionType;
-		public GameDoer(int slot, String actionType){
+		GameDoer(int slot, String actionType){
 			this.slot = slot;
 			this.actionType = actionType;
 		}

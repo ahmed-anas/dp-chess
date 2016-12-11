@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import chess.Cell;
 
-public class DiagonalMover extends Ability{
+class DiagonalMover extends Ability{
 	
-	public DiagonalMover(Piece piece){
+	DiagonalMover(Piece piece){
 		super(piece);
 	}
 	

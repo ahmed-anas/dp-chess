@@ -2,9 +2,9 @@ package pieces;
 
 import chess.Cell;
 
-public abstract class Ability extends Piece{
+abstract class Ability extends Piece{
 	protected Piece piece;
-	public Ability(Piece piece){
+	Ability(Piece piece){
 		this.piece = piece;
 	}
 	protected boolean noPieceAtCell(Cell[][] state, Coordinates position) {

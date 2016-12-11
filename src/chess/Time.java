@@ -14,13 +14,13 @@ import javax.swing.Timer;
  *
  */
 
-public class Time implements TimeSubject
+class Time implements TimeSubject
 {
 
 	private JLabel label;
 	Timer countdownTimer;
-	int timeRemmaining;
-	TimeObserver timeObserver;
+	private int timeRemmaining;
+	private TimeObserver timeObserver;
 	public Time(JLabel passedLabel)
 	{
 		countdownTimer = new Timer(1000, new CountdownTimerListener());
@@ -28,7 +28,7 @@ public class Time implements TimeSubject
 		timeRemmaining=Main.getTimeRemaining();
 	}
 	
-	public void start()
+	void start()
 	{
 		countdownTimer.start();
 	}

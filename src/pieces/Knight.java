@@ -9,13 +9,13 @@ import chess.Cell;
  *  
  *
  */
-public class Knight extends Ability
+class Knight extends Ability
 {
-	public Knight(Piece piece){
+	Knight(Piece piece){
 		super(piece);
 	}
 	
-	public boolean isValidMove(Cell[][] state, Coordinates position){
+	private boolean isValidMove(Cell[][] state, Coordinates position){
 		return position.isValid() && (state[position.getX()][position.getY()].getpiece()==null||state[position.getX()][position.getY()].getpiece().getcolor()!=this.getcolor());
 	}
 	

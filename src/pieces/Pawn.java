@@ -10,7 +10,7 @@ import chess.Cell;
  */
 public class Pawn extends Ability{
 	
-	public Pawn(Piece piece)
+	Pawn(Piece piece)
 	{
 		super(piece);
 		pawnState= (getcolor()==0) ? whitePawn:blackPawn;
@@ -98,9 +98,6 @@ public class Pawn extends Ability{
 
 
 
-	private boolean white() {
-		return getcolor()==0;
-	}
 	private abstract class PawnColour
 	{
 		protected abstract void movePawn(Cell state[][], Coordinates position);

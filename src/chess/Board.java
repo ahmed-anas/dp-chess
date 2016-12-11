@@ -1,8 +1,6 @@
 package chess;
 
-import pieces.Coordinates;
-
-public class Board {
+class Board {
 	private Cell[][] boardState;
 
 	public Board() {
@@ -16,7 +14,4 @@ public class Board {
 		this.boardState = boardState;
 	}
 	
-	public Cell at(Coordinates position){
-		return this.boardState[position.getX()][position.getY()];
-	}
 }

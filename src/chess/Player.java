@@ -27,7 +27,7 @@ public class Player implements Serializable{
 	private Integer gamesplayed;
 	private Integer gameswon;
 	
-	public Player(String name)
+	Player(String name)
 	{
 		this.name = name.trim();
 		gamesplayed = new Integer(0);
@@ -35,37 +35,33 @@ public class Player implements Serializable{
 	}
 	
 	//Name Getter
-	public String name()
+	String name()
 	{
 		return name;
 	}
 	
 	//Returns the number of games played
-	public Integer gamesplayed()
+	Integer gamesplayed()
 	{
 		return gamesplayed;
 	}
 	
 	//Returns the number of games won
-	public Integer gameswon()
+	Integer gameswon()
 	{
 		return gameswon;
 	}
 	
-	//Calculates the win percentage of the player
-	public Integer winpercent()
-	{
-		return new Integer((gameswon*100)/gamesplayed);
-	}
+
 	
 	//Increments the number of games played
-	public void updateGamesPlayed()
+	void updateGamesPlayed()
 	{
 		gamesplayed++;
 	}
 	
 	//Increments the number of games won
-	public void updateGamesWon()
+	void updateGamesWon()
 	{
 		gameswon++;
 	}
@@ -79,7 +75,7 @@ public class Player implements Serializable{
 	}
 	
 
-	public static ArrayList<Player> fetchPlayers()         //Function to fetch the list of the players
+	static ArrayList<Player> fetchPlayers()         //Function to fetch the list of the players
 	{
 		ObjectInputStream input = null;
 		ArrayList<Player> players = new ArrayList<Player>();
@@ -121,7 +117,7 @@ public class Player implements Serializable{
 		return players;
 	}
 	
-	public void Update_Player()            //Function to update the statistics of a player
+	void Update_Player()            //Function to update the statistics of a player
 	{
 		ObjectInputStream input = null;
 		ObjectOutputStream output = null;

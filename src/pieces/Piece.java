@@ -1,8 +1,6 @@
 package pieces;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-
 import chess.Cell;
 
 
@@ -20,7 +18,7 @@ public abstract class Piece implements Cloneable{
 	public abstract ArrayList<Cell> move(Cell pos[][],Coordinates position);  //Abstract Function. Must be overridden
 	
 	public static final int KING_TYPE = 1;
-	public static final int SIMPLE_TYPE = 2;
+	static final int SIMPLE_TYPE = 2;
 	
 	public abstract int getPieceType();
 	
@@ -58,21 +56,6 @@ public abstract class Piece implements Cloneable{
 	public Piece getcopy() throws CloneNotSupportedException
 	{
 		return (Piece) this.clone();
-	}
-	
-	public boolean canMoveHere(Cell state[][], Coordinates here){
-		
-		ArrayList<Cell> moves = this.move(state, here);
-		Iterator<Cell> cellIte = moves.iterator();
-		
-		while(cellIte.hasNext()){
-			Cell movableCell = cellIte.next();
-			if(movableCell.getCoordinates().equals(here))
-			{
-				return true;
-			}
-		}
-		return false;
 	}
 	
 	public abstract boolean  hasInstance(Class c);

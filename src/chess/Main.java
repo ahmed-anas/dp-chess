@@ -9,7 +9,6 @@ import javax.swing.event.ChangeListener;
 import pieces.*;
 import state.GameLoadUIAction;
 import state.GameSaveUIAction;
-import state.MoveSequence;
 import state.StateLogger;
 
 import java.awt.*;
@@ -18,7 +17,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.ListIterator;
 
 /**
@@ -36,9 +34,8 @@ import java.util.ListIterator;
 
 public class Main implements TimeObserver
 {
-	private static final long serialVersionUID = 1L;
 	public static final int WHITE_COLOUR=0;
-	public static final int BLACK_COLOUR=1;
+	private static final int BLACK_COLOUR=1;
 	private static final int HEIGHT = 700;
 	private static final int WIDTH = 1110;
 //	private static Rook wr01, wr02, br01, br02;
@@ -416,7 +413,7 @@ public class Main implements TimeObserver
 		BNames = Bnames.toArray(BNames);
 	}
 
-	public void changeMove()
+	private void changeMove()
 	{
 		int kingXCoordinate=getKing(chance).getx();
 		int kingYCoordinate=getKing(chance).gety();
@@ -575,7 +572,7 @@ public class Main implements TimeObserver
 
 	// A function to check if the King is check-mate. The Game Ends if this
 	// function returns true.
-	public boolean checkmate(int color)
+	private boolean checkmate(int color)
 	{
 		ArrayList<Cell> dlist = new ArrayList<Cell>();
 		for (int i = 0; i < 8; i++)
@@ -1002,7 +999,7 @@ public class Main implements TimeObserver
 		private final static String BLACK_PAWN = "Black_Pawn.png";
 	}
 
-	public static int getTimeRemaining()
+	static int getTimeRemaining()
 	{
 		return timeRemaining;
 	}
