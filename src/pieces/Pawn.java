@@ -59,6 +59,15 @@ public class Pawn extends Ability{
 			}
 		}
 	}
+	
+	private void addKillMoves(Cell[][] state, Coordinates killPositionFirst,
+			Coordinates killPositionSeconds) {
+		if((killPositionFirst.isValid())&&(state[killPositionFirst.getX()][killPositionFirst.getY()].getpiece()!=null)&&(state[killPositionFirst.getX()][killPositionFirst.getY()].getpiece().getcolor()!=this.getcolor()))
+			possiblemoves.add(state[killPositionFirst.getX()][killPositionFirst.getY()]);
+		
+		if((killPositionSeconds.isValid())&&(state[killPositionSeconds.getX()][killPositionSeconds.getY()].getpiece()!=null)&&(state[killPositionSeconds.getX()][killPositionSeconds.getY()].getpiece().getcolor()!=this.getcolor()))
+			possiblemoves.add(state[killPositionSeconds.getX()][killPositionSeconds.getY()]);
+	}
 
 	private void addKillMovesBlack(Cell[][] state, Coordinates position) {
 		
@@ -70,12 +79,10 @@ public class Pawn extends Ability{
 		killPositionSeconds.increaseX();
 		killPositionSeconds.increaseY();
 		
-		if((killPositionFirst.isValid())&&(state[killPositionFirst.getX()][killPositionFirst.getY()].getpiece()!=null)&&(state[killPositionFirst.getX()][killPositionFirst.getY()].getpiece().getcolor()!=this.getcolor()))
-			possiblemoves.add(state[killPositionFirst.getX()][killPositionFirst.getY()]);
-		
-		if((killPositionSeconds.isValid())&&(state[killPositionSeconds.getX()][killPositionSeconds.getY()].getpiece()!=null)&&(state[killPositionSeconds.getX()][killPositionSeconds.getY()].getpiece().getcolor()!=this.getcolor()))
-			possiblemoves.add(state[killPositionSeconds.getX()][killPositionSeconds.getY()]);
+		addKillMoves(state, killPositionFirst, killPositionSeconds);
 	}
+
+	
 
 	private void addKillMovesWhite(Cell[][] state, Coordinates position) {
 		Coordinates killPositionFirst = position.clone();
@@ -86,10 +93,7 @@ public class Pawn extends Ability{
 		killPositionSeconds.decreaseX();
 		killPositionSeconds.increaseY();
 		
-		if((killPositionFirst.isValid())&&(state[killPositionFirst.getX()][killPositionFirst.getY()].getpiece()!=null)&&(state[killPositionFirst.getX()][killPositionFirst.getY()].getpiece().getcolor()!=this.getcolor()))
-			possiblemoves.add(state[killPositionFirst.getX()][killPositionFirst.getY()]);
-		if((killPositionSeconds.isValid())&&(state[killPositionSeconds.getX()][killPositionSeconds.getY()].getpiece()!=null)&&(state[killPositionSeconds.getX()][killPositionSeconds.getY()].getpiece().getcolor()!=this.getcolor()))
-			possiblemoves.add(state[killPositionSeconds.getX()][killPositionSeconds.getY()]);
+		addKillMoves(state, killPositionFirst, killPositionSeconds);
 	}
 
 

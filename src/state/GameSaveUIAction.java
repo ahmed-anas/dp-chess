@@ -14,39 +14,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
-public class GameSaveUIAction implements ActionListener{
+public class GameSaveUIAction extends GameUIAction implements ActionListener{
 	
 	private StateLogger gameStateLogger;
 	public GameSaveUIAction(StateLogger gameStateLogger){
 		 this.gameStateLogger = gameStateLogger;
+		 actionType = "Save";
 	 }
 	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		JFrame mainFrame = new JFrame();
-		
-		JPanel mainPanel = new JPanel();
-		
-		mainPanel.setLayout(new GridLayout(4,1));
-		mainPanel.setBorder(BorderFactory.createTitledBorder(null, "Save Game Slots", TitledBorder.TOP,
-				TitledBorder.CENTER, new Font("Lucida Calligraphy", Font.PLAIN, 20), Color.ORANGE));
-		
-		
-		JButton[] slots = new JButton[5];
-		
-		for(int i = 0; i < slots.length; i++){
-			slots[i] = new JButton();
-			slots[i].setText("Save " + i);
-			slots[i].addActionListener(new GameSaveDo(i));
-			mainPanel.add(slots[i]);
-			slots[i].setVisible(true);
-		}
-		mainFrame.add(mainPanel);
-		mainFrame.pack();
-		mainPanel.setVisible(true);
-		mainFrame.setVisible(true);
-	}
 	
 	class GameSaveDo implements ActionListener{
 		private int slot;
@@ -66,6 +41,13 @@ public class GameSaveUIAction implements ActionListener{
 			}
 		}
 		
+	}
+
+
+	@Override
+	protected ActionListener getActionListener(int index) {
+		// TODO Auto-generated method stub
+		return new GameSaveDo(index);
 	}
 
 }
