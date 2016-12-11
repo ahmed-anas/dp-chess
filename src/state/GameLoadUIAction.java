@@ -2,6 +2,8 @@ package state;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -13,22 +15,22 @@ public class GameLoadUIAction extends GameUIAction implements ActionListener{
 		actionType = "Load";
 	 }
 	
-	class GameLoadDo implements ActionListener{
-		private int slot;
-		public GameLoadDo(int slot){
-			this.slot = slot;
+
+	
+	private class GameLoadDo extends GameUIAction.GameDoer{
+		
+		private GameLoadDo(int slot){
+			super(slot, "Load");
 		}
+	
 		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			
-			try {
-				gameStateLogger.load(slot);
-				JOptionPane.showMessageDialog(new JFrame(), "Load Successful","Dialog",JOptionPane.INFORMATION_MESSAGE);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				JOptionPane.showMessageDialog(new JFrame(), "Game does not exist","Dialog",JOptionPane.ERROR_MESSAGE);
-			}
+		void onAction() throws IOException, ClassNotFoundException, InterruptedException {
+			gameStateLogger.load(slot);
+		}
+		
+		@Override
+		protected String onErrorMessage(Exception e) {
+			return "Game does not exist";
 		}
 		
 	}

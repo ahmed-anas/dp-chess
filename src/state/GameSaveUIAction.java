@@ -23,22 +23,15 @@ public class GameSaveUIAction extends GameUIAction implements ActionListener{
 	 }
 	
 	
-	class GameSaveDo implements ActionListener{
-		private int slot;
-		public GameSaveDo(int slot){
-			this.slot = slot;
+	private class GameSaveDo extends GameUIAction.GameDoer{
+		
+		private GameSaveDo(int slot){
+			super(slot, "Save");
 		}
+	
 		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			
-			try {
-				gameStateLogger.save(slot);
-				JOptionPane.showMessageDialog(new JFrame(), "Save Successful","Dialog",JOptionPane.INFORMATION_MESSAGE);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				JOptionPane.showMessageDialog(new JFrame(), e.getMessage(),"Dialog",JOptionPane.ERROR_MESSAGE);
-			}
+		void onAction() throws IOException {
+			gameStateLogger.save(slot);
 		}
 		
 	}

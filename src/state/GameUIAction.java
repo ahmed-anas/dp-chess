@@ -5,10 +5,12 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
@@ -49,5 +51,35 @@ public abstract class GameUIAction {
 	}
 	
 	protected abstract ActionListener getActionListener(int index);
+	
+	abstract class GameDoer implements ActionListener{
+		protected int slot;
+		private String actionType;
+		public GameDoer(int slot, String actionType){
+			this.slot = slot;
+			this.actionType = actionType;
+		}
+		
+		abstract void onAction() throws IOException, ClassNotFoundException, InterruptedException;
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			try {
+				JOptionPane.showMessageDialog(new JFrame(), actionType + " Successful","Dialog",JOptionPane.INFORMATION_MESSAGE);
+				
+				//gameStateLogger.save(slot);
+				onAction();
+			} catch (IOException | ClassNotFoundException | InterruptedException e) {
+
+				
+				JOptionPane.showMessageDialog(new JFrame(), onErrorMessage(e),"Dialog",JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
+			}
+		}
+
+		protected String onErrorMessage(Exception e) {
+			return e.getMessage();
+		}
+	}
 
 }
