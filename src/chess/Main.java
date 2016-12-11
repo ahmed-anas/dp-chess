@@ -525,6 +525,20 @@ public class Main implements TimeObserver
 	// danger
 	private ArrayList<Cell> filterdestination(Cell fromcell)
 	{
+		
+		return checkFilterer(destinationList, fromcell, chance, false);
+		
+	}
+
+	// A Function to filter the possible moves when the king of the current
+	// player is under Check
+	private ArrayList<Cell> incheckfilter(ArrayList<Cell> destinationList, Cell fromcell, int chance)
+	{
+		return checkFilterer(destinationList, fromcell, chance, true);
+	}
+	
+	private ArrayList<Cell> checkFilterer(ArrayList<Cell> destinationList, Cell fromcell, int chance, boolean newBoardStateHasTemp)
+	{
 		ArrayList<Cell> newlist = new ArrayList<Cell>();
 		Cell newboardstate[][]=null;
 		ListIterator<Cell> it = destinationList.listIterator();
@@ -532,14 +546,19 @@ public class Main implements TimeObserver
 		while (it.hasNext())
 		{
 			newboardstate=getBoardStateCopy();
-
+			
 			Cell tempc = it.next();
 			if (newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece() != null)
 				newboardstate[tempc.getCellX()][tempc.getCellY()].removePiece();
 			newboardstate[tempc.getCellX()][tempc.getCellY()].setPiece(newboardstate[fromcell.getCellX()][fromcell.getCellY()].getpiece());
 			x = getKing(chance).getx();
 			y = getKing(chance).gety();
-			if (newboardstate[fromcell.getCellX()][fromcell.getCellY()].getpiece().getRootPiece() instanceof KingPiece)
+			
+			Cell newBoardStateCell = tempc;
+			if(!newBoardStateHasTemp){
+				newBoardStateCell = fromcell;
+			}
+			if (newboardstate[newBoardStateCell.getCellX()][newBoardStateCell.getCellY()].getpiece().getRootPiece() instanceof KingPiece)
 			{
 				newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece().setx(tempc.getCellX());
 				newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece().sety(tempc.getCellY());
@@ -548,37 +567,6 @@ public class Main implements TimeObserver
 			}
 			newboardstate[fromcell.getCellX()][fromcell.getCellY()].removePiece();
 			if (((newboardstate[x][y].getpiece())).isindanger(newboardstate) == false)
-				newlist.add(tempc);
-		}
-		return newlist;
-	}
-
-	// A Function to filter the possible moves when the king of the current
-	// player is under Check
-	private ArrayList<Cell> incheckfilter(ArrayList<Cell> destlist, Cell fromcell, int color)
-	{
-		ArrayList<Cell> newlist = new ArrayList<Cell>();
-		Cell newboardstate[][];
-		ListIterator<Cell> it = destlist.listIterator();
-		int x, y;
-		while (it.hasNext())
-		{
-			newboardstate=getBoardStateCopy();
-			Cell tempc = it.next();
-			if (newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece() != null)
-				newboardstate[tempc.getCellX()][tempc.getCellY()].removePiece();
-			newboardstate[tempc.getCellX()][tempc.getCellY()].setPiece(newboardstate[fromcell.getCellX()][fromcell.getCellY()].getpiece());
-			x = getKing(color).getx();
-			y = getKing(color).gety();
-			if (newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece().getRootPiece() instanceof KingPiece)
-			{
-				( (newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece())).setx(tempc.getCellX());
-				( (newboardstate[tempc.getCellX()][tempc.getCellY()].getpiece())).sety(tempc.getCellY());
-				x = tempc.getCellX();
-				y = tempc.getCellY();
-			}
-			newboardstate[fromcell.getCellX()][fromcell.getCellY()].removePiece();
-			if ((((newboardstate[x][y].getpiece())).isindanger(newboardstate) == false))
 				newlist.add(tempc);
 		}
 		return newlist;
