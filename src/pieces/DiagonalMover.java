@@ -23,58 +23,67 @@ public class DiagonalMover extends Ability{
 		possiblemoves.addAll(this.piece.move(state, position));
 		return possiblemoves;
 	}
-
-	private void checkNE(Cell[][] state, Coordinates position) {
-		
-		Coordinates checkPosition = position.clone();
-		checkPosition.increaseX();
-		checkPosition.increaseY();
-		while(checkPosition.getX()<8&&checkPosition.getY()<8)
-		{
-			if(noPieceAtCell(state, checkPosition))
-				possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
-			else if(ourPieceAtCell(state, checkPosition))
-				break;
-			else
-			{
-				possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
-				break;
-			}
+	
+	private void coordinatesIncrementer(Coordinates checkPosition, boolean doIncreaseX, boolean doIncreaseY){
+		if(doIncreaseX){
 			checkPosition.increaseX();
+		}
+		else
+		{
+			checkPosition.decreaseX();
+		}
+		
+		if(doIncreaseY){
 			checkPosition.increaseY();
 		}
-	}
-
-	private void checkSW(Cell[][] state, Coordinates position) {
-		
-		Coordinates checkPosition = position.clone();
-		checkPosition.decreaseX();
-		checkPosition.decreaseY();
-		while(checkPosition.getX()>=0&&checkPosition.getY()>=0)
+		else
 		{
-			if(noPieceAtCell(state, checkPosition))
-				possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
-			else if(ourPieceAtCell(state, checkPosition))
-				break;
-			else
-			{
-				possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
-				break;
-			}
-			checkPosition.decreaseX();
 			checkPosition.decreaseY();
 		}
 	}
 
+	private void checkNE(Cell[][] state, Coordinates position) {
+		Coordinates checkPosition = position.clone();
+		boolean doIncreaseX = true;
+		boolean doIncreaseY = true;
+		
+		positionsChecker(state, checkPosition, doIncreaseX, doIncreaseY);
+	}
+
 	private void checkNW(Cell[][] state, Coordinates position) {
 		Coordinates checkPosition = position.clone();
+		boolean doIncreaseX = false;
+		boolean doIncreaseY = true;
 		
-		checkPosition.decreaseX();
-		checkPosition.increaseY();
-		while(checkPosition.getX()>=0&&checkPosition.getY()<8)
+		positionsChecker(state, checkPosition, doIncreaseX, doIncreaseY);
+	}
+
+	private void checkSW(Cell[][] state, Coordinates position) {
+		Coordinates checkPosition = position.clone();
+		boolean doIncreaseX = false;
+		boolean doIncreaseY = false;
+		
+		positionsChecker(state, checkPosition, doIncreaseX, doIncreaseY);
+	}
+
+	private void checkSE(Cell[][] state, Coordinates position) {
+		Coordinates checkPosition = position.clone();
+		boolean doIncreaseX = true;
+		boolean doIncreaseY = false;
+		
+		positionsChecker(state, checkPosition, doIncreaseX, doIncreaseY);
+	}
+
+
+	private void positionsChecker(Cell[][] state, Coordinates checkPosition,
+			boolean doIncreaseX, boolean doIncreaseY) {
+		coordinatesIncrementer(checkPosition, doIncreaseX, doIncreaseY);
+		while(checkPosition.isValid())
 		{
 			if(noPieceAtCell(state, checkPosition))
+			{
 				possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
+			}
 			else if(ourPieceAtCell(state, checkPosition))
 				break;
 			else
@@ -82,30 +91,7 @@ public class DiagonalMover extends Ability{
 				possiblemoves.add(state[checkPosition.getX()][checkPosition.getY()]);
 				break;
 			}
-			checkPosition.decreaseX();
-			checkPosition.increaseY();
-		}
-	}
-
-	private void checkSE(Cell[][] state, Coordinates position) {
-		
-		Coordinates nextPosition = new Coordinates(position.getX() + 1, position.getY() - 1);
-		while(nextPosition.getX()<8 && nextPosition.getY()>=0)
-		{
-			if(noPieceAtCell(state, nextPosition))
-			{
-				possiblemoves.add(state[nextPosition.getX()][nextPosition.getY()]);
-			}
-			else if(ourPieceAtCell(state, nextPosition))
-				break;
-			else
-			{
-				possiblemoves.add(state[nextPosition.getX()][nextPosition.getY()]);
-				break;
-			}
-			nextPosition.increaseX();
-			nextPosition.decreaseY();
-			
+			coordinatesIncrementer(checkPosition, doIncreaseX, doIncreaseY);
 		}
 	}
 }
