@@ -93,7 +93,7 @@ public class Main implements TimeObserver
 	private static int timeRemaining;
 	private static JFrame chessBoard;
 	private StateLogger stateLogger;
-	
+	private TimeSubject timeSubject;
 	private JButton saveGame;
 	private JButton loadGame;
 	
@@ -188,7 +188,7 @@ public class Main implements TimeObserver
 		fetchPlayers();
 		setUpUI();	
 	}
-
+	
 	private void setUpUI()
 	{
 		chessBoard = new JFrame();
@@ -820,6 +820,7 @@ public class Main implements TimeObserver
 
 		
 	}
+	
 	public void updateUIForChessGame()
 	{
 		
@@ -842,6 +843,8 @@ public class Main implements TimeObserver
 		displayTime.add(label);
 		timer = new Time(label);
 		timer.start();
+		timeSubject=timer;
+		timeSubject.registerObserver(this);
 	}
 	
 	private void updateGamesPlayed(){
